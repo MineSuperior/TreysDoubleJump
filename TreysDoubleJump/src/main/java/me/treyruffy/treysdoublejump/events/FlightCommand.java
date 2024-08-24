@@ -4,6 +4,7 @@ import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.util.TriState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -31,7 +32,7 @@ public class FlightCommand implements CommandExecutor {
 			return true;
 		}
 		if (!ConfigManager.getConfig().getBoolean("Flight.Enabled")){
-			TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+			sender.sendMessage(ConfigManager.getConfigMessage(
 					"FlyCommandDisabled"));
 			return true;
 		}
@@ -41,23 +42,23 @@ public class FlightCommand implements CommandExecutor {
 				if (sender instanceof Player) {
 					Player p = (Player) sender;
 					if (p.hasPermission("tdj.fly")) {
-						TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage("FlyToggledOn"));
+						p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOn"));
 						addEnabledFlightPlayer(p);
 					} else {
-						TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage("NoPermission"));
+						p.sendMessage(ConfigManager.getConfigMessage("NoPermission"));
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("disable")) {
 				Player p = (Player) sender;
 				if (p.hasPermission("tdj.fly")) {
-					TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
+					p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
 					addDisabledFlightPlayer(p);
 				} else {
-					TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage("NoPermission"));
+					p.sendMessage(ConfigManager.getConfigMessage("NoPermission"));
 				}
   			} else if (Bukkit.getPlayer(args[0]) != null) {
 				if (!sender.hasPermission("tdj.fly.toggleothers")) {
-					TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+					sender.sendMessage(ConfigManager.getConfigMessage(
 							"NoPermission"));
 					return true;
 				}
@@ -70,27 +71,27 @@ public class FlightCommand implements CommandExecutor {
 					if (args[1].equalsIgnoreCase("enable")) {
 						turnFlyOn(sender, username);
 					} else if (args[1].equalsIgnoreCase("disable")) {
-						TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+						sender.sendMessage(ConfigManager.getConfigMessage(
 								"FlyToggledOffOther").replaceText(TextReplacementConfig.builder().matchLiteral("[user" +
 								"]").replacement(username.getName()).build()));
 						addDisabledFlightPlayer(username);
 						if (!LegacyComponentSerializer.legacy(ChatColor.COLOR_CHAR).serialize(ConfigManager.getConfigMessage(
 								"FlightToggledOff")).equalsIgnoreCase(""))
-							TreysDoubleJump.adventure().player(username).sendMessage(ConfigManager.getConfigMessage(
+							username.sendMessage(ConfigManager.getConfigMessage(
 									"FlightToggledOff"));
 					} else {
 						if (sender instanceof Player) {
-							TreysDoubleJump.adventure().player((Player) sender).sendMessage(ConfigManager.getConfigMessage(
+							sender.sendMessage(ConfigManager.getConfigMessage(
 									"InvalidFlyArgumentWithOther"));
 						} else {
-							TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage("InvalidFlyArgumentConsole"));
+							sender.sendMessage(ConfigManager.getConfigMessage("InvalidFlyArgumentConsole"));
 						}
 					}
 					return true;
 				}
 
 				if (FlyingPlayers.contains(username.getUniqueId().toString())) {
-					TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+					sender.sendMessage(ConfigManager.getConfigMessage(
 							"FlyToggledOffOther").replaceText(TextReplacementConfig.builder().matchLiteral("[user]").replacement(username.getName()).build()));
 					addDisabledFlightPlayer(username);
 
@@ -98,7 +99,7 @@ public class FlightCommand implements CommandExecutor {
 							"FlightToggledOff")).equalsIgnoreCase("")) {
 						System.out.println(LegacyComponentSerializer.legacy(ChatColor.COLOR_CHAR).serialize(ConfigManager.getConfigMessage(
 								"FlightToggledOff")));
-						TreysDoubleJump.adventure().player(username).sendMessage(ConfigManager.getConfigMessage(
+						username.sendMessage(ConfigManager.getConfigMessage(
 								"FlightToggledOff"));
 						}
 				} else {
@@ -106,12 +107,12 @@ public class FlightCommand implements CommandExecutor {
 				}
 			} else {
 				if (sender.hasPermission("tdj.fly.toggleothers")) {
-					TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+					sender.sendMessage(ConfigManager.getConfigMessage(
 							"PlayerNotFound").replaceText(TextReplacementConfig.builder().matchLiteral("[user]").replacement(args[0]).build()));
 				} else if (sender.hasPermission("tdj.fly")) {
-					TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage("InvalidFlyArgument"));
+					sender.sendMessage(ConfigManager.getConfigMessage("InvalidFlyArgument"));
 				} else {
-					TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage("NoPermission"));
+					sender.sendMessage(ConfigManager.getConfigMessage("NoPermission"));
 				}
 				return true;
 			}
@@ -124,38 +125,38 @@ public class FlightCommand implements CommandExecutor {
 				Player p = (Player) sender;
 				if (p.hasPermission("tdj.fly")) {
 					if (!checkIfInWorld(p)) {
-						TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+						p.sendMessage(ConfigManager.getConfigMessage(
 								"NotInWorld"));
 						return true;
 					}
 					if (FlyingPlayers.contains(p.getUniqueId().toString())) {
-						TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+						p.sendMessage(ConfigManager.getConfigMessage(
 								"FlyToggledOff"));
 						addDisabledFlightPlayer(p);
 					} else {
-						TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+						p.sendMessage(ConfigManager.getConfigMessage(
 								"FlyToggledOn"));
 						addEnabledFlightPlayer(p);
 					}
 				} else {
-					TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+					p.sendMessage(ConfigManager.getConfigMessage(
 							"NoPermission"));
 				}
 				return true;
 			}
-			TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+			sender.sendMessage(ConfigManager.getConfigMessage(
 					"PlayersOnly"));
 		}
 		return true;
 	}
 
 	private void turnFlyOn(@NotNull CommandSender sender, Player username) {
-		TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+		sender.sendMessage(ConfigManager.getConfigMessage(
 				"FlyToggledOnOther").replaceText(TextReplacementConfig.builder().matchLiteral("[user]").replacement(username.getName()).build()));
 		addEnabledFlightPlayer(username);
 		if (!LegacyComponentSerializer.legacy(ChatColor.COLOR_CHAR).serialize(ConfigManager.getConfigMessage(
 				"FlightToggledOn")).equalsIgnoreCase(""))
-			TreysDoubleJump.adventure().player(username).sendMessage(ConfigManager.getConfigMessage(
+			username.sendMessage(ConfigManager.getConfigMessage(
 					"FlightToggledOn"));
 	}
 
@@ -169,7 +170,7 @@ public class FlightCommand implements CommandExecutor {
 		player.setFlying(false);
 		try {
 			if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-				player.setFlyingFallDamage(false);
+				player.setFlyingFallDamage(TriState.FALSE);
 		} catch (NoSuchMethodError ignored) {}
 		FlyingPlayers.remove(player.getUniqueId().toString());
 	}
@@ -180,7 +181,7 @@ public class FlightCommand implements CommandExecutor {
 		player.setAllowFlight(true);
 		try {
 			if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-				player.setFlyingFallDamage(false);
+				player.setFlyingFallDamage(TriState.FALSE);
 		} catch (NoSuchMethodError ignored) {}
 		player.setFlying(true);
 		FlyingPlayers.add(player.getUniqueId().toString());

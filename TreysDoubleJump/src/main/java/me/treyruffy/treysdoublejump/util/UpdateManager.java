@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.Level;
 
 /**
  * Created by TreyRuffy on 08/12/2018.
@@ -31,7 +32,7 @@ public class UpdateManager {
 				}
       		FileUtils.copyFile(source, dest);
 		} catch (IOException e) {
-			e.printStackTrace();
+			TreysDoubleJump.getInstance().getLogger().log(Level.WARNING, "Error when updating config", e);
 		}
 
 		int lastVersion = Integer.parseInt(Objects.requireNonNull(ConfigManager.getConfig().getString("Version")).replace(".", ""));

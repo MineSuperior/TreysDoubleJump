@@ -3,7 +3,6 @@ package me.treyruffy.treysdoublejump.util;
 import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.apache.commons.lang.NullArgumentException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -43,7 +42,7 @@ public class ConfigManager {
 	// Saves the config
 	public static void saveConfig() {
 		if (MainConfig == null) {
-			throw new NullArgumentException("Cannot save a non-existent file!");
+			throw new NullPointerException("Cannot save a non-existent file!");
 		}
 		try {
 			MainConfig.save(MainConfigFile);
@@ -67,7 +66,7 @@ public class ConfigManager {
 
 	public static Component getConfigMessage(String message) {
 		String oldConfigMessage = getOldConfigMessage(message);
-		return MiniMessage.get().parse(oldConfigMessage);
+		return MiniMessage.miniMessage().deserialize(oldConfigMessage);
 	}
 
 	private static String getOldConfigMessage(String message) {
@@ -75,10 +74,7 @@ public class ConfigManager {
 		if (messageFromConfig == null) {
 			return ChatColor.RED + "Messages. " + message + " is not set in the config.";
 		}
-		if (TreysDoubleJump.canUseHexColorCode()) {
-			messageFromConfig = translateHexCodes(messageFromConfig);
-		}
-		return ChatColor.translateAlternateColorCodes('&', messageFromConfig);
+		return ChatColor.translateAlternateColorCodes('&', translateHexCodes(messageFromConfig));
 	}
 
 	static final Pattern hexPattern = Pattern.compile("#([A-Fa-f0-9]{6})");

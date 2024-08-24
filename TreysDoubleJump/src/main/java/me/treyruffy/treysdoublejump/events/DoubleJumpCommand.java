@@ -1,10 +1,10 @@
 package me.treyruffy.treysdoublejump.events;
 
-import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import me.treyruffy.treysdoublejump.util.UpdateManager;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.util.TriState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -38,10 +38,10 @@ public class DoubleJumpCommand implements CommandExecutor {
 						if (checkWorldAndPerm(p))
 							return true;
 						if (addEnabledPlayer(p)) {
-							TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage("ToggledOn"));
+							p.sendMessage(ConfigManager.getConfigMessage("ToggledOn"));
 						}
 					} else {
-						TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+						sender.sendMessage(ConfigManager.getConfigMessage(
 								"PlayersOnly"));
 						return true;
 					}
@@ -53,11 +53,11 @@ public class DoubleJumpCommand implements CommandExecutor {
 						if (checkWorldAndPerm(p))
 							return true;
 						if (addDisabledPlayer(p)) {
-							TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+							p.sendMessage(ConfigManager.getConfigMessage(
 									"ToggledOff"));
 						}
 					} else {
-						TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage("PlayersOnly"));
+						sender.sendMessage(ConfigManager.getConfigMessage("PlayersOnly"));
 						return true;
 					}
 				}
@@ -65,7 +65,7 @@ public class DoubleJumpCommand implements CommandExecutor {
 				else if (Bukkit.getPlayer(args[0]) != null) {
 
 					if (!sender.hasPermission("tdj.toggleothers")) {
-						TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+						sender.sendMessage(ConfigManager.getConfigMessage(
 								"NoPermission"));
 						return true;
 					}
@@ -75,7 +75,7 @@ public class DoubleJumpCommand implements CommandExecutor {
 
 					// Player is not online
 					if (!username.isOnline()) {
-						TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+						sender.sendMessage(ConfigManager.getConfigMessage(
 								"PlayerNotFound").replaceText(TextReplacementConfig.builder().matchLiteral("[user]").replacement(args[0]).build()));
 						return true;
 					}
@@ -83,12 +83,12 @@ public class DoubleJumpCommand implements CommandExecutor {
 						// /tdj <username> enable
 						if (args[1].equalsIgnoreCase("enable")) {
 							if (addEnabledPlayer(username)) {
-								TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+								sender.sendMessage(ConfigManager.getConfigMessage(
 										"ToggledOnOther").replaceText(TextReplacementConfig.builder().matchLiteral(
 												"[user]").replacement(username.getName()).build()));
 								if (!LegacyComponentSerializer.legacy(ChatColor.COLOR_CHAR).serialize(ConfigManager.getConfigMessage(
 										"DoubleJumpToggledOn")).equalsIgnoreCase(""))
-									TreysDoubleJump.adventure().player(username).sendMessage(ConfigManager.getConfigMessage(
+									username.sendMessage(ConfigManager.getConfigMessage(
 											"DoubleJumpToggledOn"));
 							}
 						}
@@ -98,7 +98,7 @@ public class DoubleJumpCommand implements CommandExecutor {
 						}
 						// invalid argument after /tdj <username>
 						else {
-							TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+							sender.sendMessage(ConfigManager.getConfigMessage(
 									"InvalidArgumentWithOther"));
 							return true;
 						}
@@ -107,12 +107,12 @@ public class DoubleJumpCommand implements CommandExecutor {
 					else {
 						if (DisablePlayers.contains(username.getUniqueId().toString()) || FlightCommand.FlyingPlayers.contains(username.getUniqueId().toString())) {
 							if (addEnabledPlayer(username)) {
-								TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+								sender.sendMessage(ConfigManager.getConfigMessage(
 										"ToggledOnOther").replaceText(TextReplacementConfig.builder().matchLiteral(
 												"[user]").replacement(username.getName()).build()));
 								if (!LegacyComponentSerializer.legacy(ChatColor.COLOR_CHAR).serialize(ConfigManager.getConfigMessage(
 										"DoubleJumpToggledOff")).equalsIgnoreCase(""))
-									TreysDoubleJump.adventure().player(username).sendMessage(ConfigManager.getConfigMessage(
+									username.sendMessage(ConfigManager.getConfigMessage(
 											"DoubleJumpToggledOn"));
 							}
 						} else {
@@ -123,16 +123,16 @@ public class DoubleJumpCommand implements CommandExecutor {
 				// invalid argument
 				else {
 					if (!(sender instanceof Player)) {
-						TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+						sender.sendMessage(ConfigManager.getConfigMessage(
 								"PlayerNotFound").replaceText(TextReplacementConfig.builder().matchLiteral("[user]").replacement(args[0]).build()));
 						return true;
 					}
 					if (!sender.hasPermission("tdj.toggleothers")) {
-						TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+						sender.sendMessage(ConfigManager.getConfigMessage(
 								"InvalidArgument"));
 						return true;
 					}
-					TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+					sender.sendMessage(ConfigManager.getConfigMessage(
 							"PlayerNotFound").replaceText(TextReplacementConfig.builder().matchLiteral("[user]").replacement(args[0]).build()));
 					return true;
 				}
@@ -144,17 +144,17 @@ public class DoubleJumpCommand implements CommandExecutor {
 					return true;
 				if (DisablePlayers.contains(p.getUniqueId().toString()) || FlightCommand.FlyingPlayers.contains(p.getUniqueId().toString())) {
 					if (addEnabledPlayer(p))
-						TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+						p.sendMessage(ConfigManager.getConfigMessage(
 								"ToggledOn"));
 				} else {
 					if (addDisabledPlayer(p)) {
-						TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+						p.sendMessage(ConfigManager.getConfigMessage(
 								"ToggledOff"));
 					}
 				}
 				return true;
 			}
-			TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+			sender.sendMessage(ConfigManager.getConfigMessage(
 					"InvalidArgumentConsole"));
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("djreload")){
@@ -172,7 +172,7 @@ public class DoubleJumpCommand implements CommandExecutor {
 					e.printStackTrace();
 				}
 			} else {
-				TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+				sender.sendMessage(ConfigManager.getConfigMessage(
 						"NoPermission"));
 			}
 			return true;
@@ -182,11 +182,11 @@ public class DoubleJumpCommand implements CommandExecutor {
 
 	private void turnDJOff(@NotNull CommandSender sender, Player username) {
 		if (addDisabledPlayer(username)) {
-			TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage(
+			sender.sendMessage(ConfigManager.getConfigMessage(
 					"ToggledOffOther").replaceText(TextReplacementConfig.builder().matchLiteral("[user]").replacement(username.getName()).build()));
 			if (!LegacyComponentSerializer.legacy(ChatColor.COLOR_CHAR).serialize(ConfigManager.getConfigMessage(
 					"DoubleJumpToggledOff")).equalsIgnoreCase(""))
-				TreysDoubleJump.adventure().player(username).sendMessage(ConfigManager.getConfigMessage(
+				username.sendMessage(ConfigManager.getConfigMessage(
 						"DoubleJumpToggledOff"));
 		}
 	}
@@ -203,7 +203,7 @@ public class DoubleJumpCommand implements CommandExecutor {
 			player.setAllowFlight(false);
 			try {
 				if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-					player.setFlyingFallDamage(false);
+					player.setFlyingFallDamage(TriState.FALSE);
 			} catch (NoSuchMethodError ignored) {}
 			player.setFlying(false);
 		}
@@ -230,12 +230,12 @@ public class DoubleJumpCommand implements CommandExecutor {
 	// Returns false if the player is not in the correct world or doesn't have permissions
 	private boolean checkWorldAndPerm(Player player) {
 		if (!player.hasPermission("tdj.command")) {
-			TreysDoubleJump.adventure().player(player).sendMessage(ConfigManager.getConfigMessage(
+			player.sendMessage(ConfigManager.getConfigMessage(
 					"NoPermission"));
 			return true;
 		}
 		if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains((player).getWorld().getName())) {
-			TreysDoubleJump.adventure().player(player).sendMessage(ConfigManager.getConfigMessage(
+			player.sendMessage(ConfigManager.getConfigMessage(
 					"NotInWorld"));
 			return true;
 		}

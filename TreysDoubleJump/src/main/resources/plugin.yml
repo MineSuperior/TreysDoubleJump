@@ -6,7 +6,7 @@ description: ${project.description}
 website: ${project.url}
 prefix: Trey's Double Jump
 softdepend: [NoCheatPlus, PlaceholderAPI, MVdWPlaceholderAPI]
-api-version: 1.13
+api-version: 1.21
 permissions:
   tdj.*:
     default: op

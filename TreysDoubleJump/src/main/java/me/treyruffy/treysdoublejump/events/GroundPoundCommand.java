@@ -28,26 +28,26 @@ public class GroundPoundCommand implements CommandExecutor {
 					Player p = (Player) sender;
 					if (p.hasPermission("tdj.groundpoundcommand")) {
 						if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains((p).getWorld().getName())){
-							TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+							p.sendMessage(ConfigManager.getConfigMessage(
 									"NotInWorld"));
 							return true;
 						}
 						if (groundPoundDisabled.contains(p.getUniqueId().toString())) {
-							TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+							p.sendMessage(ConfigManager.getConfigMessage(
 									"GroundPoundToggledOn"));
 							groundPoundDisabled.remove(p.getUniqueId().toString());
 						} else {
 							DoubleJump.Grounded.remove(p.getUniqueId().toString());
-							TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage(
+							p.sendMessage(ConfigManager.getConfigMessage(
 									"GroundPoundToggledOff"));
 							groundPoundDisabled.add(p.getUniqueId().toString());
 						}
 					} else {
-						TreysDoubleJump.adventure().player(p).sendMessage(ConfigManager.getConfigMessage("NoPermission"));
+						p.sendMessage(ConfigManager.getConfigMessage("NoPermission"));
 					}
 					return true;
 				}
-				TreysDoubleJump.adventure().sender(sender).sendMessage(ConfigManager.getConfigMessage("PlayersOnly"));
+				sender.sendMessage(ConfigManager.getConfigMessage("PlayersOnly"));
 				return true;
 			}
 		}
