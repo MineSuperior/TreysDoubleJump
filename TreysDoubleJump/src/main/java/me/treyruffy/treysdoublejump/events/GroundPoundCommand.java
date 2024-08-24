@@ -1,6 +1,5 @@
 package me.treyruffy.treysdoublejump.events;
 
-import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,41 +15,37 @@ import java.util.ArrayList;
 
 public class GroundPoundCommand implements CommandExecutor {
 
-	// Players in this list cannot ground pound
-	public static ArrayList<String> groundPoundDisabled = new ArrayList<>();
-	
-	// Sets all the /groundpound commands
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("groundpound")) {
-			if (ConfigManager.getConfig().getBoolean("GroundPound.Enabled")){
-				if (sender instanceof Player) {
-					Player p = (Player) sender;
-					if (p.hasPermission("tdj.groundpoundcommand")) {
-						if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains((p).getWorld().getName())){
-							p.sendMessage(ConfigManager.getConfigMessage(
-									"NotInWorld"));
-							return true;
-						}
-						if (groundPoundDisabled.contains(p.getUniqueId().toString())) {
-							p.sendMessage(ConfigManager.getConfigMessage(
-									"GroundPoundToggledOn"));
-							groundPoundDisabled.remove(p.getUniqueId().toString());
-						} else {
-							DoubleJump.Grounded.remove(p.getUniqueId().toString());
-							p.sendMessage(ConfigManager.getConfigMessage(
-									"GroundPoundToggledOff"));
-							groundPoundDisabled.add(p.getUniqueId().toString());
-						}
-					} else {
-						p.sendMessage(ConfigManager.getConfigMessage("NoPermission"));
-					}
-					return true;
-				}
-				sender.sendMessage(ConfigManager.getConfigMessage("PlayersOnly"));
-				return true;
-			}
-		}
-		return true;
-	}
+    // Players in this list cannot ground pound
+    public static final ArrayList<String> groundPoundDisabled = new ArrayList<>();
+
+    // Sets all the /groundpound commands
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("groundpound")) {
+            if (ConfigManager.getConfig().getBoolean("GroundPound.Enabled")) {
+                if (sender instanceof Player p) {
+                    if (p.hasPermission("tdj.groundpoundcommand")) {
+                        if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains((p).getWorld().getName())) {
+                            p.sendMessage(ConfigManager.getConfigMessage("NotInWorld"));
+                            return true;
+                        }
+                        if (groundPoundDisabled.contains(p.getUniqueId().toString())) {
+                            p.sendMessage(ConfigManager.getConfigMessage("GroundPoundToggledOn"));
+                            groundPoundDisabled.remove(p.getUniqueId().toString());
+                        } else {
+                            DoubleJump.Grounded.remove(p.getUniqueId().toString());
+                            p.sendMessage(ConfigManager.getConfigMessage("GroundPoundToggledOff"));
+                            groundPoundDisabled.add(p.getUniqueId().toString());
+                        }
+                    } else {
+                        p.sendMessage(ConfigManager.getConfigMessage("NoPermission"));
+                    }
+                    return true;
+                }
+                sender.sendMessage(ConfigManager.getConfigMessage("PlayersOnly"));
+                return true;
+            }
+        }
+        return true;
+    }
 }

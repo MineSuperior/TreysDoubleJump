@@ -4,9 +4,9 @@ name: ${project.name}
 author: TreyRuffy
 description: ${project.description}
 website: ${project.url}
-prefix: Trey's Double Jump
-softdepend: [NoCheatPlus, PlaceholderAPI, MVdWPlaceholderAPI]
-api-version: 1.21
+prefix: "Trey's Double Jump"
+softdepend: [ NoCheatPlus, PlaceholderAPI, MVdWPlaceholderAPI ]
+api-version: "1.21"
 permissions:
   tdj.*:
     default: op
@@ -65,13 +65,13 @@ permissions:
 commands:
   tdj:
     description: Allows you to toggle double jumping.
-    aliases: [dj, doublejump, treysdoublejump]
+    aliases: [ dj, doublejump, treysdoublejump ]
   fly:
     description: Allows you to fly!
-    aliases: [flight, togglefly, toggleflight]
+    aliases: [ flight, togglefly, toggleflight ]
   groundpound:
     description: Allows you to toggle ground pounding
-    aliases: [togglegroundpound]
+    aliases: [ togglegroundpound ]
   djreload:
     description: Allows you to reload the configs
-    aliases: [doublejumpreload]
+    aliases: [ doublejumpreload ]

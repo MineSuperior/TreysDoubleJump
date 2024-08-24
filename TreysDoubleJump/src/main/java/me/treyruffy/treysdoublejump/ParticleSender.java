@@ -11,20 +11,20 @@ import org.bukkit.entity.Player;
  */
 
 public class ParticleSender {
-	public static void sendParticle(Player p, String particle, Location loc, int amount, float r, float g, float b) {
-		if (ConfigManager.getConfig().getBoolean("Particles.AllPlayers")) {
-			if (particle.equals("REDSTONE")) {
-				p.getWorld().spawnParticle(Particle.valueOf(particle), loc, amount, 0, 0, 0,
-						new Particle.DustOptions(Color.fromRGB((int) r * 100, (int) g * 100, (int) b * 100), 1));
-			} else {
-				p.getWorld().spawnParticle(Particle.valueOf(particle), loc, amount, 0, 0, 0, 1);
-			}
-		} else {
-			if (particle.equals("REDSTONE")) {
-				p.spawnParticle(Particle.valueOf(particle), loc, amount, 0, 0, 0, new Particle.DustOptions(Color.fromRGB((int) r * 100, (int) g * 100, (int) b * 100), 1));
-			} else {
-				p.spawnParticle(Particle.valueOf(particle), loc, amount, 0, 0, 0, 1);
-			}
-		}
-	}
+    public static void sendParticle(Player p, String particle, Location loc, int amount, float r, float g, float b) {
+        if (ConfigManager.getConfig().getBoolean("Particles.AllPlayers")) {
+            if (particle.equals("REDSTONE")) {
+                p.getWorld().spawnParticle(Particle.valueOf(particle), loc, amount, 0, 0, 0,
+                        new Particle.DustOptions(Color.fromRGB((int) r * 100, (int) g * 100, (int) b * 100), 1));
+            } else {
+                p.getWorld().spawnParticle(Particle.valueOf(particle), loc, amount, 0, 0, 0, 1);
+            }
+        } else {
+            if (particle.equals("REDSTONE")) {
+                p.spawnParticle(Particle.valueOf(particle), loc, amount, 0, 0, 0, new Particle.DustOptions(Color.fromRGB((int) r * 100, (int) g * 100, (int) b * 100), 1));
+            } else {
+                p.spawnParticle(Particle.valueOf(particle), loc, amount, 0, 0, 0, 1);
+            }
+        }
+    }
 }

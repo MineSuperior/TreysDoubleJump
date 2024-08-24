@@ -7,6 +7,8 @@ import me.treyruffy.treysdoublejump.api.FlightAPI;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 /**
  * Created by TreyRuffy on 08/12/2018.
  * Updated 01/26/2020.
@@ -14,60 +16,52 @@ import org.jetbrains.annotations.NotNull;
 
 public class PAPI extends PlaceholderExpansion {
 
-	private final TreysDoubleJump plugin;
-	
-	// Registers the tdj placeholder
-	public PAPI(TreysDoubleJump plugin) {
-		this.plugin = plugin;
-	}
-	
-	@Override
-	public boolean persist() {
-		return true;
-	}
+    private final TreysDoubleJump plugin;
 
-	@Override
-	public boolean canRegister() {
-		return true;
-	}
-	
-	// Registers the placeholders
-	public String onPlaceholderRequest(Player p, @NotNull String identifier) {
-		if (p == null){
-			return "";
-		}
-		if (identifier.equalsIgnoreCase("cooldown")){
-			return DoubleJumpAPI.getDoubleJumpTime(p).toString();
-		}
-		if (identifier.equalsIgnoreCase("flightenabled")) {
-			return FlightAPI.isFlightEnabled(p).toString();
-		}
-		if (identifier.equalsIgnoreCase("doublejumpenabled")) {
-			return DoubleJumpAPI.isDoubleJumpEnabled(p).toString();
-		}
-		if (identifier.equalsIgnoreCase("groundpoundenabled")) {
-			return DoubleJumpAPI.isGroundPoundEnabled(p).toString();
-		}
-		if (identifier.equalsIgnoreCase("canusegroundpound")) {
-			return DoubleJumpAPI.canUseGroundPound(p).toString();
-		}
-		
-		return null;
-	}
+    // Registers the tdj placeholder
+    public PAPI(TreysDoubleJump plugin) {
+        this.plugin = plugin;
+    }
 
-	@Override
-	public @NotNull String getAuthor() {
-		return plugin.getDescription().getAuthors().toString();
-	}
+    @Override
+    public boolean persist() {
+        return true;
+    }
 
-	@Override
-	public @NotNull String getIdentifier() {
-		return "tdj";
-	}
+    @Override
+    public boolean canRegister() {
+        return true;
+    }
 
-	@Override
-	public @NotNull String getVersion() {
-		return plugin.getDescription().getVersion();
-	}
+    // Registers the placeholders
+    public String onPlaceholderRequest(Player p, @NotNull String identifier) {
+        if (p == null) {
+            return "";
+        }
+
+        return switch (identifier.toLowerCase(Locale.ROOT)) {
+            case "cooldown" -> DoubleJumpAPI.getDoubleJumpTime(p).toString();
+            case "flightenabled" -> FlightAPI.isFlightEnabled(p).toString();
+            case "doublejumpenabled" -> DoubleJumpAPI.isDoubleJumpEnabled(p).toString();
+            case "groundpoundenabled" -> DoubleJumpAPI.isGroundPoundEnabled(p).toString();
+            case "canusegroundpound" -> DoubleJumpAPI.canUseGroundPound(p).toString();
+            default -> null;
+        };
+    }
+
+    @Override
+    public @NotNull String getAuthor() {
+        return plugin.getDescription().getAuthors().toString();
+    }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return "tdj";
+    }
+
+    @Override
+    public @NotNull String getVersion() {
+        return plugin.getDescription().getVersion();
+    }
 
 }

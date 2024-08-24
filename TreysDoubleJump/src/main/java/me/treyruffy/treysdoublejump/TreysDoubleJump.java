@@ -19,34 +19,34 @@ import java.util.Objects;
 
 public class TreysDoubleJump extends JavaPlugin implements Listener {
 
-	private static TreysDoubleJump instance;
+    private static TreysDoubleJump instance;
 
-	public static TreysDoubleJump getInstance() {
-		return instance;
-	}
+    public static TreysDoubleJump getInstance() {
+        return instance;
+    }
 
-	public static File dataFolder;
+    public static File dataFolder;
 
-	// Sets up everything
-	@Override
-	public void onEnable() {
-		instance = this;
-		ConfigManager.reloadConfig();
-		dataFolder = getDataFolder();
-		new UpdateManager().setup();
-		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(this, this);
-		pm.registerEvents(new DoubleJump(), this);
-		pm.registerEvents(new NoFallDamage(), this);
-		pm.registerEvents(new PlayerWorldSwitchEvent(), this);
+    // Sets up everything
+    @Override
+    public void onEnable() {
+        instance = this;
+        ConfigManager.reloadConfig();
+        dataFolder = getDataFolder();
+        new UpdateManager().setup();
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(this, this);
+        pm.registerEvents(new DoubleJump(), this);
+        pm.registerEvents(new NoFallDamage(), this);
+        pm.registerEvents(new PlayerWorldSwitchEvent(), this);
 
-		Objects.requireNonNull(getCommand("fly")).setExecutor(new FlightCommand());
-		Objects.requireNonNull(getCommand("tdj")).setExecutor(new DoubleJumpCommand());
-		Objects.requireNonNull(getCommand("djreload")).setExecutor(new DoubleJumpCommand());
-		Objects.requireNonNull(getCommand("groundpound")).setExecutor(new GroundPoundCommand());
+        Objects.requireNonNull(getCommand("fly")).setExecutor(new FlightCommand());
+        Objects.requireNonNull(getCommand("tdj")).setExecutor(new DoubleJumpCommand());
+        Objects.requireNonNull(getCommand("djreload")).setExecutor(new DoubleJumpCommand());
+        Objects.requireNonNull(getCommand("groundpound")).setExecutor(new GroundPoundCommand());
 
-		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-			new PAPI(this).register();
-		}
-	}
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new PAPI(this).register();
+        }
+    }
 }
