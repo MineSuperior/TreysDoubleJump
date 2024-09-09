@@ -23,7 +23,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -41,9 +40,6 @@ public class DoubleJump implements Listener {
 
     // Cooldown timer for each player stored in a hashmap
     private static final Map<UUID, Integer> COOLDOWN = new HashMap<>();
-
-    // The physical cooldown timer is stored as a hashmap
-    final Map<UUID, BukkitRunnable> cooldownTask = new HashMap<>();
 
     // Adds if the player is exempt from NCP, if it is enabled
     final Set<UUID> NCPPlayer = new HashSet<>();
@@ -115,11 +111,8 @@ public class DoubleJump implements Listener {
                             return;
                         }
                         p.setAllowFlight(true);
-                        try {
-                            if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                                p.setFlyingFallDamage(TriState.TRUE);
-                        } catch (NoSuchMethodError ignored) {
-                        }
+                        if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
+                            p.setFlyingFallDamage(TriState.TRUE);
                         GROUNDED.remove(uuid);
                         return;
                     }
@@ -131,33 +124,25 @@ public class DoubleJump implements Listener {
                         return;
                     }
                     p.setAllowFlight(true);
-                    try {
-                        if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                            p.setFlyingFallDamage(TriState.TRUE);
-                    } catch (NoSuchMethodError ignored) {
-                    }
+                    if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
+                        p.setFlyingFallDamage(TriState.TRUE);
                     GROUNDED.remove(uuid);
                     NCP(p);
                     return;
                 }
                 return;
             }
-            Bukkit.getScheduler().scheduleSyncDelayedTask(TreysDoubleJump.getPlugin(TreysDoubleJump.class),
-                    () -> {
-                        PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
+            p.getScheduler().runDelayed(TreysDoubleJump.getInstance(), task -> {
+                PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
 
-                        Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
-                        if (preDoubleJumpEvent.isCancelled()) {
-                            return;
-                        }
-                        p.setAllowFlight(true);
-                        try {
-                            if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                                p.setFlyingFallDamage(TriState.TRUE);
-                        } catch (NoSuchMethodError ignored) {
-                        }
-                        GROUNDED.remove(uuid);
-                    }, 1L);
+                Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
+                if (preDoubleJumpEvent.isCancelled()) {
+                    return;
+                }
+                p.setAllowFlight(true);
+                if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
+                    p.setFlyingFallDamage(TriState.TRUE);
+            }, () -> GROUNDED.remove(uuid), 1L);
         } else {
             if (Bukkit.getPluginManager().getPlugin("NoCheatPlus") != null) {
                 if (p.hasPermission("tdj.ncp")) {
@@ -169,11 +154,8 @@ public class DoubleJump implements Listener {
                             return;
                         }
                         p.setAllowFlight(true);
-                        try {
-                            if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                                p.setFlyingFallDamage(TriState.TRUE);
-                        } catch (NoSuchMethodError ignored) {
-                        }
+                        if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
+                            p.setFlyingFallDamage(TriState.TRUE);
                         GROUNDED.remove(uuid);
                         return;
                     }
@@ -185,11 +167,8 @@ public class DoubleJump implements Listener {
                         return;
                     }
                     p.setAllowFlight(true);
-                    try {
-                        if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                            p.setFlyingFallDamage(TriState.TRUE);
-                    } catch (NoSuchMethodError ignored) {
-                    }
+                    if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
+                        p.setFlyingFallDamage(TriState.TRUE);
                     GROUNDED.remove(uuid);
                     NCP(p);
                 }
@@ -202,11 +181,8 @@ public class DoubleJump implements Listener {
                 return;
             }
             p.setAllowFlight(true);
-            try {
-                if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                    p.setFlyingFallDamage(TriState.TRUE);
-            } catch (NoSuchMethodError ignored) {
-            }
+            if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
+                p.setFlyingFallDamage(TriState.TRUE);
             GROUNDED.remove(uuid);
         }
 
@@ -214,14 +190,14 @@ public class DoubleJump implements Listener {
     }
 
     private void NCP(Player p) {
-        NCPPlayer.add(p.getUniqueId());
-        Bukkit.getScheduler().scheduleSyncDelayedTask(TreysDoubleJump.getPlugin(TreysDoubleJump.class), () -> {
+        final UUID uuid = p.getUniqueId();
+        NCPPlayer.add(uuid);
+        p.getScheduler().runDelayed(TreysDoubleJump.getInstance(), task -> {
             try {
                 NCPExemptionManager.unexempt(p, CheckType.MOVING_SURVIVALFLY);
-                NCPPlayer.remove(p.getUniqueId());
-            } catch (Exception ignored) {
-            }
-        }, 60L);
+                NCPPlayer.remove(uuid);
+            } catch (Exception ignored) {}
+        }, () -> NCPPlayer.remove(uuid), 60L);
     }
 
     // Checks if the player requested flight, without having access to it, so it can remove flight and set the player's velocity, particles, etc
@@ -275,11 +251,8 @@ public class DoubleJump implements Listener {
 
         e.setCancelled(true);
         p.setAllowFlight(false);
-        try {
-            if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                p.setFlyingFallDamage(TriState.FALSE);
-        } catch (NoSuchMethodError ignored) {
-        }
+        if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
+            p.setFlyingFallDamage(TriState.FALSE);
         p.setFlying(false);
 
 
@@ -293,18 +266,12 @@ public class DoubleJump implements Listener {
 
         if (doubleJumpEvent.isCooldownEnabled()) {
             COOLDOWN.put(uuid, doubleJumpEvent.getCooldownTime());
-            cooldownTask.put(uuid, new BukkitRunnable() {
-                @Override
-                public void run() {
-                    COOLDOWN.put(uuid, COOLDOWN.get(uuid) - 1);
-                    if (COOLDOWN.get(uuid) == 0) {
-                        COOLDOWN.remove(uuid);
-                        cooldownTask.remove(uuid);
-                        cancel();
-                    }
-                }
-            });
-            cooldownTask.get(uuid).runTaskTimer(TreysDoubleJump.getInstance(), 20, 20);
+            p.getScheduler().runAtFixedRate(TreysDoubleJump.getInstance(), task -> {
+                COOLDOWN.put(uuid, COOLDOWN.get(uuid) - 1);
+                if (COOLDOWN.get(uuid) != 0) return;
+                COOLDOWN.remove(uuid);
+                task.cancel();
+            }, () -> COOLDOWN.remove(uuid), 20L, 20L);
         }
 
         p.setVelocity(p.getLocation().getDirection().multiply(doubleJumpEvent.getVelocityForward()).setY(doubleJumpEvent.getVelocityUp()));
