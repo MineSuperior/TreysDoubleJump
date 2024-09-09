@@ -1,7 +1,5 @@
 package me.treyruffy.treysdoublejump.events;
 
-import fr.neatmonster.nocheatplus.checks.CheckType;
-import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 import me.treyruffy.treysdoublejump.ParticleSender;
 import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.api.DoubleJumpEvent;
@@ -20,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.util.Vector;
@@ -41,9 +38,6 @@ public class DoubleJump implements Listener {
     // Cooldown timer for each player stored in a hashmap
     private static final Map<UUID, Integer> COOLDOWN = new HashMap<>();
 
-    // Adds if the player is exempt from NCP, if it is enabled
-    final Set<UUID> NCPPlayer = new HashSet<>();
-
     // Adds if the player can ground pound
     public static final Set<UUID> GROUNDED = new HashSet<>();
 
@@ -51,18 +45,6 @@ public class DoubleJump implements Listener {
     // Grabs the cooldown from config
     public static Integer getCooldown(Player p) {
         return COOLDOWN.get(p.getUniqueId());
-    }
-
-    // Removes the exemption from NCP if the player leaves
-    @EventHandler
-    public void onLeave(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        if (NCPPlayer.contains(p.getUniqueId())) {
-            try {
-                NCPExemptionManager.unexempt(p, CheckType.MOVING_SURVIVALFLY);
-                NCPPlayer.remove(p.getUniqueId());
-            } catch (Exception ignored) {}
-        }
     }
 
     // Always checks whether the player can double jump again, and if so, it adds flight to the player
@@ -100,38 +82,6 @@ public class DoubleJump implements Listener {
                 return;
             }
 
-
-            if (Bukkit.getPluginManager().getPlugin("NoCheatPlus") != null) {
-                if (p.hasPermission("tdj.ncp")) {
-                    if (NCPExemptionManager.isExempted(p, CheckType.MOVING_SURVIVALFLY)) {
-                        PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
-
-                        Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
-                        if (preDoubleJumpEvent.isCancelled()) {
-                            return;
-                        }
-                        p.setAllowFlight(true);
-                        if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                            p.setFlyingFallDamage(TriState.TRUE);
-                        GROUNDED.remove(uuid);
-                        return;
-                    }
-                    NCPExemptionManager.exemptPermanently(p, CheckType.MOVING_SURVIVALFLY);
-                    PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
-
-                    Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
-                    if (preDoubleJumpEvent.isCancelled()) {
-                        return;
-                    }
-                    p.setAllowFlight(true);
-                    if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                        p.setFlyingFallDamage(TriState.TRUE);
-                    GROUNDED.remove(uuid);
-                    NCP(p);
-                    return;
-                }
-                return;
-            }
             p.getScheduler().runDelayed(TreysDoubleJump.getInstance(), task -> {
                 PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
 
@@ -144,36 +94,6 @@ public class DoubleJump implements Listener {
                     p.setFlyingFallDamage(TriState.TRUE);
             }, () -> GROUNDED.remove(uuid), 1L);
         } else {
-            if (Bukkit.getPluginManager().getPlugin("NoCheatPlus") != null) {
-                if (p.hasPermission("tdj.ncp")) {
-                    if (NCPExemptionManager.isExempted(p, CheckType.MOVING_SURVIVALFLY)) {
-                        PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
-
-                        Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
-                        if (preDoubleJumpEvent.isCancelled()) {
-                            return;
-                        }
-                        p.setAllowFlight(true);
-                        if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                            p.setFlyingFallDamage(TriState.TRUE);
-                        GROUNDED.remove(uuid);
-                        return;
-                    }
-                    NCPExemptionManager.exemptPermanently(p, CheckType.MOVING_SURVIVALFLY);
-                    PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
-
-                    Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
-                    if (preDoubleJumpEvent.isCancelled()) {
-                        return;
-                    }
-                    p.setAllowFlight(true);
-                    if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                        p.setFlyingFallDamage(TriState.TRUE);
-                    GROUNDED.remove(uuid);
-                    NCP(p);
-                }
-                return;
-            }
             PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
 
             Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
@@ -187,17 +107,6 @@ public class DoubleJump implements Listener {
         }
 
 
-    }
-
-    private void NCP(Player p) {
-        final UUID uuid = p.getUniqueId();
-        NCPPlayer.add(uuid);
-        p.getScheduler().runDelayed(TreysDoubleJump.getInstance(), task -> {
-            try {
-                NCPExemptionManager.unexempt(p, CheckType.MOVING_SURVIVALFLY);
-                NCPPlayer.remove(uuid);
-            } catch (Exception ignored) {}
-        }, () -> NCPPlayer.remove(uuid), 60L);
     }
 
     // Checks if the player requested flight, without having access to it, so it can remove flight and set the player's velocity, particles, etc

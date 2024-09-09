@@ -11,7 +11,6 @@
 # |  tdj.*         - Gives all the permissions to a player                            |
 # |  tdj.command   - Allows you to use the /tdj command                               |
 # |  tdj.use       - Allows you to use the double jump feature                        |
-# |  tdj.ncp       - Used if you have NoCheatPlus                                     |
 # |  tdj.sounds    - Allows you to hear sounds whilst double jumping                  |
 # |  tdj.particles - Allows you to summon particles whilst double jumping             |
 # +-----------------------------------------------------------------------------------+

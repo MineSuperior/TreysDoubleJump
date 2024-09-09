@@ -5,14 +5,13 @@ author: TreyRuffy
 description: ${project.description}
 website: ${project.url}
 prefix: "Trey's Double Jump"
-softdepend: [ NoCheatPlus, PlaceholderAPI, MVdWPlaceholderAPI ]
+softdepend: [ PlaceholderAPI, MVdWPlaceholderAPI ]
 api-version: "1.21"
 permissions:
   tdj.*:
     default: op
     description: Get granted all the double jump permissions.
     children:
-      tdj.ncp: true
       tdj.use: true
       tdj.sounds: true
       tdj.particles: true
@@ -26,9 +25,6 @@ permissions:
   tdj.use:
     default: true
     description: Use the double jump feature.
-  tdj.ncp:
-    default: op
-    description: Use the double jump feature with NCP.
   tdj.sounds:
     default: true
     description: Sounds whilst double jumping.
