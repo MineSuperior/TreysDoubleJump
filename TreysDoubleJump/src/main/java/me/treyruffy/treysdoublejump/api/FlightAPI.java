@@ -17,7 +17,7 @@ public class FlightAPI {
      * @return flight enabled for the player
      */
     public static Boolean isFlightEnabled(Player player) {
-        return FlightCommand.FlyingPlayers.contains(player.getUniqueId().toString());
+        return FlightCommand.FLYING_PLAYERS.contains(player.getUniqueId());
     }
 
     /**
@@ -28,11 +28,9 @@ public class FlightAPI {
      */
     public static void setFlight(Player player, Boolean enabled) {
         if (!enabled) {
-            if (!FlightCommand.FlyingPlayers.contains(player.getUniqueId().toString())) {
-                FlightCommand.FlyingPlayers.add(player.getUniqueId().toString());
-            }
+            FlightCommand.FLYING_PLAYERS.add(player.getUniqueId());
         } else {
-            FlightCommand.FlyingPlayers.remove(player.getUniqueId().toString());
+            FlightCommand.FLYING_PLAYERS.remove(player.getUniqueId());
         }
     }
 

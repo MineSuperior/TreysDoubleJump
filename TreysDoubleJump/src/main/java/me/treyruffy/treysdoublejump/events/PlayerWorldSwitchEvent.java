@@ -22,14 +22,14 @@ public class PlayerWorldSwitchEvent implements Listener {
         if (!p.hasPermission("tdj.use")
                 || p.getGameMode() == GameMode.SPECTATOR
                 || p.getGameMode() == GameMode.CREATIVE
-                || DoubleJumpCommand.DisablePlayers.contains(p.getUniqueId().toString())) {
+                || DoubleJumpCommand.DISABLE_PLAYERS.contains(p.getUniqueId())) {
             return;
         }
         if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
-            if (FlightCommand.FlyingPlayers.contains(p.getUniqueId().toString())) {
+            if (FlightCommand.FLYING_PLAYERS.contains(p.getUniqueId())) {
                 p.setFallDistance(0f);
                 p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
-                FlightCommand.FlyingPlayers.remove(p.getUniqueId().toString());
+                FlightCommand.FLYING_PLAYERS.remove(p.getUniqueId());
             }
             p.setFlying(false);
             p.setAllowFlight(false);

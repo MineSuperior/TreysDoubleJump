@@ -8,7 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by TreyRuffy on 08/12/2018.
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 public class GroundPoundCommand implements CommandExecutor {
 
     // Players in this list cannot ground pound
-    public static final ArrayList<String> groundPoundDisabled = new ArrayList<>();
+    public static final Set<UUID> GROUND_POUND_DISABLED = new HashSet<>();
 
     // Sets all the /groundpound commands
     @Override
@@ -30,13 +32,13 @@ public class GroundPoundCommand implements CommandExecutor {
                             p.sendMessage(ConfigManager.getConfigMessage("NotInWorld"));
                             return true;
                         }
-                        if (groundPoundDisabled.contains(p.getUniqueId().toString())) {
+                        if (GROUND_POUND_DISABLED.contains(p.getUniqueId())) {
                             p.sendMessage(ConfigManager.getConfigMessage("GroundPoundToggledOn"));
-                            groundPoundDisabled.remove(p.getUniqueId().toString());
+                            GROUND_POUND_DISABLED.remove(p.getUniqueId());
                         } else {
-                            DoubleJump.Grounded.remove(p.getUniqueId().toString());
+                            DoubleJump.GROUNDED.remove(p.getUniqueId());
                             p.sendMessage(ConfigManager.getConfigMessage("GroundPoundToggledOff"));
-                            groundPoundDisabled.add(p.getUniqueId().toString());
+                            GROUND_POUND_DISABLED.add(p.getUniqueId());
                         }
                     } else {
                         p.sendMessage(ConfigManager.getConfigMessage("NoPermission"));

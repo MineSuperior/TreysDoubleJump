@@ -11,8 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by TreyRuffy on 08/12/2018.
@@ -21,7 +22,7 @@ import java.util.List;
 public class FlightCommand implements CommandExecutor {
 
     // Players in this list can fly
-    public static final List<String> FlyingPlayers = new ArrayList<>();
+    public static final Set<UUID> FLYING_PLAYERS = new HashSet<>();
 
     // Sets all commands for /fly
     @Override
@@ -79,7 +80,7 @@ public class FlightCommand implements CommandExecutor {
                     return true;
                 }
 
-                if (FlyingPlayers.contains(username.getUniqueId().toString())) {
+                if (FLYING_PLAYERS.contains(username.getUniqueId())) {
                     sender.sendMessage(ConfigManager.getConfigMessage("FlyToggledOffOther").replaceText(b -> b.matchLiteral("[user]").replacement(username.getName())));
                     addDisabledFlightPlayer(username);
 
@@ -111,7 +112,7 @@ public class FlightCommand implements CommandExecutor {
                         p.sendMessage(ConfigManager.getConfigMessage("NotInWorld"));
                         return true;
                     }
-                    if (FlyingPlayers.contains(p.getUniqueId().toString())) {
+                    if (FLYING_PLAYERS.contains(p.getUniqueId())) {
                         p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
                         addDisabledFlightPlayer(p);
                     } else {
@@ -147,19 +148,19 @@ public class FlightCommand implements CommandExecutor {
             if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
                 player.setFlyingFallDamage(TriState.FALSE);
         } catch (NoSuchMethodError ignored) {}
-        FlyingPlayers.remove(player.getUniqueId().toString());
+        FLYING_PLAYERS.remove(player.getUniqueId());
     }
 
     private void addEnabledFlightPlayer(Player player) {
         player.setFallDistance(0f);
-        DoubleJump.Grounded.remove(player.getUniqueId().toString());
+        DoubleJump.GROUNDED.remove(player.getUniqueId());
         player.setAllowFlight(true);
         try {
             if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
                 player.setFlyingFallDamage(TriState.FALSE);
         } catch (NoSuchMethodError ignored) {}
         player.setFlying(true);
-        FlyingPlayers.add(player.getUniqueId().toString());
+        FLYING_PLAYERS.add(player.getUniqueId());
     }
 
 }

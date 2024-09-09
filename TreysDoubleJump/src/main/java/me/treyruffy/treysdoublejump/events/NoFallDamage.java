@@ -32,7 +32,7 @@ public class NoFallDamage implements Listener {
             e.setCancelled(false);
             return;
         }
-        if (DoubleJumpCommand.DisablePlayers.contains(p.getUniqueId().toString())) {
+        if (DoubleJumpCommand.DISABLE_PLAYERS.contains(p.getUniqueId())) {
             e.setCancelled(false);
         }
         if (ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {

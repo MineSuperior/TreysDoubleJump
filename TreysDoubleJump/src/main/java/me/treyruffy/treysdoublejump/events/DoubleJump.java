@@ -26,8 +26,11 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -37,33 +40,32 @@ import java.util.logging.Level;
 public class DoubleJump implements Listener {
 
     // Cooldown timer for each player stored in a hashmap
-    private static final HashMap<Player, Integer> cooldown = new HashMap<>();
+    private static final Map<UUID, Integer> COOLDOWN = new HashMap<>();
 
     // The physical cooldown timer is stored as a hashmap
-    final HashMap<Player, BukkitRunnable> cooldownTask = new HashMap<>();
+    final Map<UUID, BukkitRunnable> cooldownTask = new HashMap<>();
 
     // Adds if the player is exempt from NCP, if it is enabled
-    final ArrayList<String> NCPPlayer = new ArrayList<>();
+    final Set<UUID> NCPPlayer = new HashSet<>();
 
     // Adds if the player can ground pound
-    public static final ArrayList<String> Grounded = new ArrayList<>();
+    public static final Set<UUID> GROUNDED = new HashSet<>();
 
 
     // Grabs the cooldown from config
     public static Integer getCooldown(Player p) {
-        return cooldown.get(p);
+        return COOLDOWN.get(p.getUniqueId());
     }
 
     // Removes the exemption from NCP if the player leaves
     @EventHandler
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        if (NCPPlayer.contains(p.getUniqueId().toString())) {
+        if (NCPPlayer.contains(p.getUniqueId())) {
             try {
                 NCPExemptionManager.unexempt(p, CheckType.MOVING_SURVIVALFLY);
-                NCPPlayer.remove(p.getUniqueId().toString());
-            } catch (Exception ignored) {
-            }
+                NCPPlayer.remove(p.getUniqueId());
+            } catch (Exception ignored) {}
         }
     }
 
@@ -79,11 +81,12 @@ public class DoubleJump implements Listener {
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
             return;
         }
+        final UUID uuid = p.getUniqueId();
         if (!ConfigManager.getConfig().getStringList("DisabledBlocks").isEmpty()) {
             for (String blocks : ConfigManager.getConfig().getStringList("DisabledBlocks")) {
                 try {
                     if (p.getWorld().getBlockAt(p.getLocation().add(0, -1, 0)).getType() == Material.valueOf(blocks.toUpperCase()) || p.getWorld().getBlockAt(p.getLocation()).getType() == Material.valueOf(blocks.toUpperCase())) {
-                        Grounded.remove(p.getUniqueId().toString());
+                        GROUNDED.remove(uuid);
                         return;
                     }
                 } catch (Exception ex) {
@@ -91,9 +94,9 @@ public class DoubleJump implements Listener {
                 }
             }
         }
-        if (cooldown.containsKey(p)
-                || DoubleJumpCommand.DisablePlayers.contains(p.getUniqueId().toString())
-                || FlightCommand.FlyingPlayers.contains(p.getUniqueId().toString())) {
+        if (COOLDOWN.containsKey(uuid)
+                || DoubleJumpCommand.DISABLE_PLAYERS.contains(uuid)
+                || FlightCommand.FLYING_PLAYERS.contains(uuid)) {
             return;
         }
         if (!ConfigManager.getConfig().getBoolean("InfiniteJump.Enabled") || !p.hasPermission("tdj.infinitejump")) {
@@ -117,7 +120,7 @@ public class DoubleJump implements Listener {
                                 p.setFlyingFallDamage(TriState.TRUE);
                         } catch (NoSuchMethodError ignored) {
                         }
-                        Grounded.remove(p.getUniqueId().toString());
+                        GROUNDED.remove(uuid);
                         return;
                     }
                     NCPExemptionManager.exemptPermanently(p, CheckType.MOVING_SURVIVALFLY);
@@ -133,7 +136,7 @@ public class DoubleJump implements Listener {
                             p.setFlyingFallDamage(TriState.TRUE);
                     } catch (NoSuchMethodError ignored) {
                     }
-                    Grounded.remove(p.getUniqueId().toString());
+                    GROUNDED.remove(uuid);
                     NCP(p);
                     return;
                 }
@@ -153,7 +156,7 @@ public class DoubleJump implements Listener {
                                 p.setFlyingFallDamage(TriState.TRUE);
                         } catch (NoSuchMethodError ignored) {
                         }
-                        Grounded.remove(p.getUniqueId().toString());
+                        GROUNDED.remove(uuid);
                     }, 1L);
         } else {
             if (Bukkit.getPluginManager().getPlugin("NoCheatPlus") != null) {
@@ -171,7 +174,7 @@ public class DoubleJump implements Listener {
                                 p.setFlyingFallDamage(TriState.TRUE);
                         } catch (NoSuchMethodError ignored) {
                         }
-                        Grounded.remove(p.getUniqueId().toString());
+                        GROUNDED.remove(uuid);
                         return;
                     }
                     NCPExemptionManager.exemptPermanently(p, CheckType.MOVING_SURVIVALFLY);
@@ -187,7 +190,7 @@ public class DoubleJump implements Listener {
                             p.setFlyingFallDamage(TriState.TRUE);
                     } catch (NoSuchMethodError ignored) {
                     }
-                    Grounded.remove(p.getUniqueId().toString());
+                    GROUNDED.remove(uuid);
                     NCP(p);
                 }
                 return;
@@ -204,18 +207,18 @@ public class DoubleJump implements Listener {
                     p.setFlyingFallDamage(TriState.TRUE);
             } catch (NoSuchMethodError ignored) {
             }
-            Grounded.remove(p.getUniqueId().toString());
+            GROUNDED.remove(uuid);
         }
 
 
     }
 
     private void NCP(Player p) {
-        NCPPlayer.add(p.getUniqueId().toString());
+        NCPPlayer.add(p.getUniqueId());
         Bukkit.getScheduler().scheduleSyncDelayedTask(TreysDoubleJump.getPlugin(TreysDoubleJump.class), () -> {
             try {
                 NCPExemptionManager.unexempt(p, CheckType.MOVING_SURVIVALFLY);
-                NCPPlayer.remove(p.getUniqueId().toString());
+                NCPPlayer.remove(p.getUniqueId());
             } catch (Exception ignored) {
             }
         }, 60L);
@@ -225,13 +228,14 @@ public class DoubleJump implements Listener {
     @EventHandler
     public void onPlayerToggleFlight(PlayerToggleFlightEvent e) {
         final Player p = e.getPlayer();
-        if (FlightCommand.FlyingPlayers.contains(p.getUniqueId().toString())
-                || cooldown.containsKey(p)
+        final UUID uuid = p.getUniqueId();
+        if (FlightCommand.FLYING_PLAYERS.contains(uuid)
+                || COOLDOWN.containsKey(uuid)
                 || p.getGameMode() == GameMode.SPECTATOR
                 || p.getGameMode() == GameMode.CREATIVE
                 || !p.hasPermission("tdj.use")
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())
-                || DoubleJumpCommand.DisablePlayers.contains(p.getUniqueId().toString())) {
+                || DoubleJumpCommand.DISABLE_PLAYERS.contains(uuid)) {
             return;
         }
 
@@ -283,24 +287,24 @@ public class DoubleJump implements Listener {
             return;
         }
 
-        if (!GroundPoundCommand.groundPoundDisabled.contains(p.getUniqueId().toString())) {
-            Grounded.add(p.getUniqueId().toString());
+        if (!GroundPoundCommand.GROUND_POUND_DISABLED.contains(uuid)) {
+            GROUNDED.add(uuid);
         }
 
         if (doubleJumpEvent.isCooldownEnabled()) {
-            cooldown.put(p, doubleJumpEvent.getCooldownTime());
-            cooldownTask.put(p, new BukkitRunnable() {
+            COOLDOWN.put(uuid, doubleJumpEvent.getCooldownTime());
+            cooldownTask.put(uuid, new BukkitRunnable() {
                 @Override
                 public void run() {
-                    cooldown.put(p, cooldown.get(p) - 1);
-                    if (cooldown.get(p) == 0) {
-                        cooldown.remove(p);
-                        cooldownTask.remove(p);
+                    COOLDOWN.put(uuid, COOLDOWN.get(uuid) - 1);
+                    if (COOLDOWN.get(uuid) == 0) {
+                        COOLDOWN.remove(uuid);
+                        cooldownTask.remove(uuid);
                         cancel();
                     }
                 }
             });
-            cooldownTask.get(p).runTaskTimer(TreysDoubleJump.getInstance(), 20, 20);
+            cooldownTask.get(uuid).runTaskTimer(TreysDoubleJump.getInstance(), 20, 20);
         }
 
         p.setVelocity(p.getLocation().getDirection().multiply(doubleJumpEvent.getVelocityForward()).setY(doubleJumpEvent.getVelocityUp()));
@@ -333,9 +337,9 @@ public class DoubleJump implements Listener {
                 || !p.hasPermission("tdj.use")
                 || !p.hasPermission("tdj.groundpound")
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())
-                || !Grounded.contains(p.getUniqueId().toString())
-                || FlightCommand.FlyingPlayers.contains(p.getUniqueId().toString())
-                || DoubleJumpCommand.DisablePlayers.contains(p.getUniqueId().toString())) {
+                || !GROUNDED.contains(p.getUniqueId())
+                || FlightCommand.FLYING_PLAYERS.contains(p.getUniqueId())
+                || DoubleJumpCommand.DISABLE_PLAYERS.contains(p.getUniqueId())) {
             return;
         }
 
@@ -346,7 +350,7 @@ public class DoubleJump implements Listener {
 
         Bukkit.getPluginManager().callEvent(groundPoundEvent);
 
-        if (groundPoundEvent.isCancelled() || GroundPoundCommand.groundPoundDisabled.contains(p.getUniqueId().toString())) {
+        if (groundPoundEvent.isCancelled() || GroundPoundCommand.GROUND_POUND_DISABLED.contains(p.getUniqueId())) {
             return;
         }
         p.setVelocity(new Vector(0, -groundPoundEvent.getVelocityDown(), 0));

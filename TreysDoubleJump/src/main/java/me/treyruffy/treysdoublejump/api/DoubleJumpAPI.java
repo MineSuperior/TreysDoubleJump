@@ -37,7 +37,7 @@ public class DoubleJumpAPI {
      */
     // Accesses whether the player can double jump or not
     public static Boolean isDoubleJumpEnabled(Player player) {
-        return !DoubleJumpCommand.DisablePlayers.contains(player.getUniqueId().toString());
+        return !DoubleJumpCommand.DISABLE_PLAYERS.contains(player.getUniqueId());
     }
 
     /**
@@ -49,11 +49,9 @@ public class DoubleJumpAPI {
     // Sets whether the player can double jump or not
     public static void setDoubleJump(Player player, Boolean enabled) {
         if (!enabled) {
-            if (!DoubleJumpCommand.DisablePlayers.contains(player.getUniqueId().toString())) {
-                DoubleJumpCommand.DisablePlayers.add(player.getUniqueId().toString());
-            }
+            DoubleJumpCommand.DISABLE_PLAYERS.add(player.getUniqueId());
         } else {
-            DoubleJumpCommand.DisablePlayers.remove(player.getUniqueId().toString());
+            DoubleJumpCommand.DISABLE_PLAYERS.remove(player.getUniqueId());
         }
     }
 
@@ -65,7 +63,7 @@ public class DoubleJumpAPI {
      */
     // Accesses whether the player has access to ground pound
     public static Boolean isGroundPoundEnabled(Player player) {
-        return !GroundPoundCommand.groundPoundDisabled.contains(player.getUniqueId().toString());
+        return !GroundPoundCommand.GROUND_POUND_DISABLED.contains(player.getUniqueId());
     }
 
     /**
@@ -77,7 +75,7 @@ public class DoubleJumpAPI {
      */
     // Accesses whether the player can use ground pound now
     public static Boolean canUseGroundPound(Player player) {
-        return DoubleJump.Grounded.contains(player.getUniqueId().toString());
+        return DoubleJump.GROUNDED.contains(player.getUniqueId());
     }
 
     /**
@@ -89,11 +87,9 @@ public class DoubleJumpAPI {
     // Sets whether the player can or cannot use ground pound
     public static void setGroundPound(Player player, Boolean enabled) {
         if (!enabled) {
-            if (!GroundPoundCommand.groundPoundDisabled.contains(player.getUniqueId().toString())) {
-                GroundPoundCommand.groundPoundDisabled.add(player.getUniqueId().toString());
-            }
+            GroundPoundCommand.GROUND_POUND_DISABLED.add(player.getUniqueId());
         } else {
-            GroundPoundCommand.groundPoundDisabled.remove(player.getUniqueId().toString());
+            GroundPoundCommand.GROUND_POUND_DISABLED.remove(player.getUniqueId());
         }
     }
 }
