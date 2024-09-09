@@ -1,8 +1,8 @@
 package me.treyruffy.treysdoublejump.api;
 
 import me.treyruffy.treysdoublejump.events.DoubleJump;
-import me.treyruffy.treysdoublejump.events.DoubleJumpCommand;
-import me.treyruffy.treysdoublejump.events.GroundPoundCommand;
+import me.treyruffy.treysdoublejump.commands.DoubleJumpCommand;
+import me.treyruffy.treysdoublejump.commands.GroundPoundCommand;
 import org.bukkit.entity.Player;
 
 /* Created by TreyRuffy on 08/12/2018. */

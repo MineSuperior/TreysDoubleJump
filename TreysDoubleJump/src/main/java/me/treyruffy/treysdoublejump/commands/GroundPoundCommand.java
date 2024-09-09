@@ -1,5 +1,6 @@
-package me.treyruffy.treysdoublejump.events;
+package me.treyruffy.treysdoublejump.commands;
 
+import me.treyruffy.treysdoublejump.events.DoubleJump;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

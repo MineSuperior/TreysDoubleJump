@@ -1,5 +1,6 @@
-package me.treyruffy.treysdoublejump.events;
+package me.treyruffy.treysdoublejump.commands;
 
+import me.treyruffy.treysdoublejump.events.DoubleJump;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.util.TriState;

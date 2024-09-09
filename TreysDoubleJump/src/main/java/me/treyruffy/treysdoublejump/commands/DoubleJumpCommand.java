@@ -1,4 +1,4 @@
-package me.treyruffy.treysdoublejump.events;
+package me.treyruffy.treysdoublejump.commands;
 
 import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.util.ConfigManager;

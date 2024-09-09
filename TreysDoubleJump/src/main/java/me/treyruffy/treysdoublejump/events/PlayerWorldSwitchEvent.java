@@ -1,5 +1,7 @@
 package me.treyruffy.treysdoublejump.events;
 
+import me.treyruffy.treysdoublejump.commands.DoubleJumpCommand;
+import me.treyruffy.treysdoublejump.commands.FlightCommand;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.GameMode;

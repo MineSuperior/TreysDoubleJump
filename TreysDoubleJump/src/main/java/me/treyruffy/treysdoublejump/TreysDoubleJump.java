@@ -1,5 +1,8 @@
 package me.treyruffy.treysdoublejump;
 
+import me.treyruffy.treysdoublejump.commands.DoubleJumpCommand;
+import me.treyruffy.treysdoublejump.commands.FlightCommand;
+import me.treyruffy.treysdoublejump.commands.GroundPoundCommand;
 import me.treyruffy.treysdoublejump.events.*;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import me.treyruffy.treysdoublejump.util.PAPI;
