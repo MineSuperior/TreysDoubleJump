@@ -158,5 +158,4 @@ public class FlightCommand implements CommandExecutor {
         player.setFlying(true);
         FLYING_PLAYERS.add(player.getUniqueId());
     }
-
 }

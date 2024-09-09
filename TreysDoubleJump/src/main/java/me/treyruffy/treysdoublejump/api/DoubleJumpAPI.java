@@ -21,11 +21,8 @@ public class DoubleJumpAPI {
      */
     // Accesses the cooldown timer for the player
     public static Integer getDoubleJumpTime(Player player) {
-        if (DoubleJump.getCooldown(player) == null || DoubleJump.getCooldown(player) == 0) {
-            return 0;
-        } else {
-            return DoubleJump.getCooldown(player);
-        }
+        final Integer cooldown = DoubleJump.getCooldown(player);
+        return cooldown == null ? 0 : cooldown;
     }
 
     /**
@@ -37,7 +34,7 @@ public class DoubleJumpAPI {
      */
     // Accesses whether the player can double jump or not
     public static Boolean isDoubleJumpEnabled(Player player) {
-        return !DoubleJumpCommand.DISABLE_PLAYERS.contains(player.getUniqueId());
+        return !DoubleJumpCommand.DISABLED_PLAYERS.contains(player.getUniqueId());
     }
 
     /**
@@ -48,11 +45,12 @@ public class DoubleJumpAPI {
      */
     // Sets whether the player can double jump or not
     public static void setDoubleJump(Player player, Boolean enabled) {
-        if (!enabled) {
-            DoubleJumpCommand.DISABLE_PLAYERS.add(player.getUniqueId());
-        } else {
-            DoubleJumpCommand.DISABLE_PLAYERS.remove(player.getUniqueId());
+        if (enabled) {
+            DoubleJumpCommand.DISABLED_PLAYERS.remove(player.getUniqueId());
+            return;
         }
+
+        DoubleJumpCommand.DISABLED_PLAYERS.add(player.getUniqueId());
     }
 
     /**
@@ -86,10 +84,11 @@ public class DoubleJumpAPI {
      */
     // Sets whether the player can or cannot use ground pound
     public static void setGroundPound(Player player, Boolean enabled) {
-        if (!enabled) {
-            GroundPoundCommand.GROUND_POUND_DISABLED.add(player.getUniqueId());
-        } else {
+        if (enabled) {
             GroundPoundCommand.GROUND_POUND_DISABLED.remove(player.getUniqueId());
+            return;
         }
+
+        GroundPoundCommand.GROUND_POUND_DISABLED.add(player.getUniqueId());
     }
 }

@@ -26,7 +26,7 @@ import java.util.logging.Level;
 public class DoubleJumpCommand implements CommandExecutor {
 
     // Players in this list cannot use double jump
-    public static final Set<UUID> DISABLE_PLAYERS = new HashSet<>();
+    public static final Set<UUID> DISABLED_PLAYERS = new HashSet<>();
 
     // All the commands for /tdj
     @Override
@@ -96,7 +96,7 @@ public class DoubleJumpCommand implements CommandExecutor {
                     }
                     // /tdj <username>
                     else {
-                        if (DISABLE_PLAYERS.contains(username.getUniqueId()) || FlightCommand.FLYING_PLAYERS.contains(username.getUniqueId())) {
+                        if (DISABLED_PLAYERS.contains(username.getUniqueId()) || FlightCommand.FLYING_PLAYERS.contains(username.getUniqueId())) {
                             if (addEnabledPlayer(username)) {
                                 sender.sendMessage(ConfigManager.getConfigMessage("ToggledOnOther").replaceText(b -> b.matchLiteral("[user]").replacement(username.getName())));
                                 if (!LegacyComponentSerializer.legacy(ChatColor.COLOR_CHAR).serialize(ConfigManager.getConfigMessage("DoubleJumpToggledOff")).equalsIgnoreCase(""))
@@ -124,7 +124,7 @@ public class DoubleJumpCommand implements CommandExecutor {
             } else if (sender instanceof Player p) {
                 if (checkWorldAndPerm(p))
                     return true;
-                if (DISABLE_PLAYERS.contains(p.getUniqueId()) || FlightCommand.FLYING_PLAYERS.contains(p.getUniqueId())) {
+                if (DISABLED_PLAYERS.contains(p.getUniqueId()) || FlightCommand.FLYING_PLAYERS.contains(p.getUniqueId())) {
                     if (addEnabledPlayer(p))
                         p.sendMessage(ConfigManager.getConfigMessage("ToggledOn"));
                 } else {
@@ -167,7 +167,7 @@ public class DoubleJumpCommand implements CommandExecutor {
     }
 
     private boolean addDisabledPlayer(Player player) {
-        DISABLE_PLAYERS.add(player.getUniqueId());
+        DISABLED_PLAYERS.add(player.getUniqueId());
         if (player.getGameMode() == GameMode.CREATIVE
                 || player.getGameMode() == GameMode.SPECTATOR
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains((player).getWorld().getName())) {
@@ -184,10 +184,10 @@ public class DoubleJumpCommand implements CommandExecutor {
 
     private boolean addEnabledPlayer(Player player) {
         FlightCommand.FLYING_PLAYERS.remove(player.getUniqueId());
-        if (!DISABLE_PLAYERS.contains(player.getUniqueId())) {
+        if (!DISABLED_PLAYERS.contains(player.getUniqueId())) {
             return true;
         }
-        DISABLE_PLAYERS.remove(player.getUniqueId());
+        DISABLED_PLAYERS.remove(player.getUniqueId());
         if (player.getGameMode() == GameMode.CREATIVE
                 || player.getGameMode() == GameMode.SPECTATOR
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains((player).getWorld().getName())) {
@@ -210,5 +210,4 @@ public class DoubleJumpCommand implements CommandExecutor {
         }
         return false;
     }
-
 }

@@ -10,7 +10,6 @@ import me.treyruffy.treysdoublejump.commands.FlightCommand;
 import me.treyruffy.treysdoublejump.commands.GroundPoundCommand;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import net.kyori.adventure.util.TriState;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -24,6 +23,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -73,7 +73,7 @@ public class DoubleJump implements Listener {
             }
         }
         if (COOLDOWN.containsKey(uuid)
-                || DoubleJumpCommand.DISABLE_PLAYERS.contains(uuid)
+                || DoubleJumpCommand.DISABLED_PLAYERS.contains(uuid)
                 || FlightCommand.FLYING_PLAYERS.contains(uuid)) {
             return;
         }
@@ -83,30 +83,22 @@ public class DoubleJump implements Listener {
             }
 
             p.getScheduler().runDelayed(TreysDoubleJump.getInstance(), task -> {
-                PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
-
-                Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
-                if (preDoubleJumpEvent.isCancelled()) {
+                if (!new PreDoubleJumpEvent(p, false).callEvent())
                     return;
-                }
+
                 p.setAllowFlight(true);
                 if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
                     p.setFlyingFallDamage(TriState.TRUE);
             }, () -> GROUNDED.remove(uuid), 1L);
         } else {
-            PreDoubleJumpEvent preDoubleJumpEvent = new PreDoubleJumpEvent(p, false);
-
-            Bukkit.getPluginManager().callEvent(preDoubleJumpEvent);
-            if (preDoubleJumpEvent.isCancelled()) {
+            if (!new PreDoubleJumpEvent(p, false).callEvent())
                 return;
-            }
+
             p.setAllowFlight(true);
             if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
                 p.setFlyingFallDamage(TriState.TRUE);
             GROUNDED.remove(uuid);
         }
-
-
     }
 
     // Checks if the player requested flight, without having access to it, so it can remove flight and set the player's velocity, particles, etc
@@ -120,7 +112,7 @@ public class DoubleJump implements Listener {
                 || p.getGameMode() == GameMode.CREATIVE
                 || !p.hasPermission("tdj.use")
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())
-                || DoubleJumpCommand.DISABLE_PLAYERS.contains(uuid)) {
+                || DoubleJumpCommand.DISABLED_PLAYERS.contains(uuid)) {
             return;
         }
 
@@ -189,19 +181,18 @@ public class DoubleJump implements Listener {
             p.playSound(p.getLocation(), doubleJumpEvent.getSound(), doubleJumpEvent.getVolume(), doubleJumpEvent.getPitch());
         }
 
-        if (doubleJumpEvent.particlesEnabled()) {
-            if (doubleJumpEvent.isParticlesForEveryone()) {
-                for (Player players : Bukkit.getOnlinePlayers()) {
-                    ParticleSender.sendParticle(players, doubleJumpEvent.getParticleType(), p.getLocation(),
-                            doubleJumpEvent.getParticleAmount(), doubleJumpEvent.getParticleR(),
-                            doubleJumpEvent.getParticleG(), doubleJumpEvent.getParticleB());
-                }
-            } else {
-                ParticleSender.sendParticle(p, doubleJumpEvent.getParticleType(),
-                        p.getLocation(), doubleJumpEvent.getParticleAmount(), doubleJumpEvent.getParticleR(),
-                        doubleJumpEvent.getParticleG(), doubleJumpEvent.getParticleB());
-            }
+        if (!doubleJumpEvent.particlesEnabled()) return;
+
+        if (doubleJumpEvent.isParticlesForEveryone()) {
+            ParticleSender.sendParticle(p.getWorld().getPlayers(),doubleJumpEvent.getParticleType(), p.getLocation(),
+                    doubleJumpEvent.getParticleAmount(), doubleJumpEvent.getParticleR(),
+                    doubleJumpEvent.getParticleG(), doubleJumpEvent.getParticleB());
+            return;
         }
+
+        ParticleSender.sendParticle(List.of(p), doubleJumpEvent.getParticleType(),
+            p.getLocation(), doubleJumpEvent.getParticleAmount(), doubleJumpEvent.getParticleR(),
+            doubleJumpEvent.getParticleG(), doubleJumpEvent.getParticleB());
     }
 
     // Checks whether the player tries to sneak while double jumping, if they have permission to
@@ -215,7 +206,7 @@ public class DoubleJump implements Listener {
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())
                 || !GROUNDED.contains(p.getUniqueId())
                 || FlightCommand.FLYING_PLAYERS.contains(p.getUniqueId())
-                || DoubleJumpCommand.DISABLE_PLAYERS.contains(p.getUniqueId())) {
+                || DoubleJumpCommand.DISABLED_PLAYERS.contains(p.getUniqueId())) {
             return;
         }
 
@@ -223,12 +214,10 @@ public class DoubleJump implements Listener {
         double velocityDown = ConfigManager.getConfig().getDouble("GroundPound.VelocityDown");
 
         GroundPoundEvent groundPoundEvent = new GroundPoundEvent(p, isCancelled, velocityDown);
-
-        Bukkit.getPluginManager().callEvent(groundPoundEvent);
-
-        if (groundPoundEvent.isCancelled() || GroundPoundCommand.GROUND_POUND_DISABLED.contains(p.getUniqueId())) {
+        if (!groundPoundEvent.callEvent() || GroundPoundCommand.GROUND_POUND_DISABLED.contains(p.getUniqueId())) {
             return;
         }
+
         p.setVelocity(new Vector(0, -groundPoundEvent.getVelocityDown(), 0));
     }
 

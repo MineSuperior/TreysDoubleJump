@@ -3,16 +3,15 @@ package me.treyruffy.treysdoublejump;
 import me.treyruffy.treysdoublejump.commands.DoubleJumpCommand;
 import me.treyruffy.treysdoublejump.commands.FlightCommand;
 import me.treyruffy.treysdoublejump.commands.GroundPoundCommand;
-import me.treyruffy.treysdoublejump.events.*;
+import me.treyruffy.treysdoublejump.events.DoubleJump;
+import me.treyruffy.treysdoublejump.events.NoFallDamage;
+import me.treyruffy.treysdoublejump.events.PlayerWorldSwitchEvent;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import me.treyruffy.treysdoublejump.util.PAPI;
 import me.treyruffy.treysdoublejump.util.UpdateManager;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.Objects;
 
 /**
@@ -20,7 +19,7 @@ import java.util.Objects;
  * Updated 01/03/2021
  */
 
-public class TreysDoubleJump extends JavaPlugin implements Listener {
+public class TreysDoubleJump extends JavaPlugin {
 
     private static TreysDoubleJump instance;
 
@@ -28,17 +27,16 @@ public class TreysDoubleJump extends JavaPlugin implements Listener {
         return instance;
     }
 
-    public static File dataFolder;
+    public TreysDoubleJump() {
+        instance = this;
+    }
 
     // Sets up everything
     @Override
     public void onEnable() {
-        instance = this;
         ConfigManager.reloadConfig();
-        dataFolder = getDataFolder();
         new UpdateManager().setup();
-        PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(this, this);
+        PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new DoubleJump(), this);
         pm.registerEvents(new NoFallDamage(), this);
         pm.registerEvents(new PlayerWorldSwitchEvent(), this);
@@ -48,8 +46,7 @@ public class TreysDoubleJump extends JavaPlugin implements Listener {
         Objects.requireNonNull(getCommand("djreload")).setExecutor(new DoubleJumpCommand());
         Objects.requireNonNull(getCommand("groundpound")).setExecutor(new GroundPoundCommand());
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new PAPI(this).register();
-        }
+        if (pm.getPlugin("PlacehodlerAPI") == null) return;
+        new PAPI().register();
     }
 }

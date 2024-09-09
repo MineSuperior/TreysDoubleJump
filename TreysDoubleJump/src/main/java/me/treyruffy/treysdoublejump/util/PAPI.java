@@ -15,14 +15,6 @@ import java.util.Locale;
  */
 
 public class PAPI extends PlaceholderExpansion {
-
-    private final TreysDoubleJump plugin;
-
-    // Registers the tdj placeholder
-    public PAPI(TreysDoubleJump plugin) {
-        this.plugin = plugin;
-    }
-
     @Override
     public boolean persist() {
         return true;
@@ -51,7 +43,7 @@ public class PAPI extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return plugin.getDescription().getAuthors().toString();
+        return TreysDoubleJump.getInstance().getDescription().getAuthors().toString();
     }
 
     @Override
@@ -61,7 +53,6 @@ public class PAPI extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return plugin.getDescription().getVersion();
+        return TreysDoubleJump.getInstance().getDescription().getVersion();
     }
-
 }

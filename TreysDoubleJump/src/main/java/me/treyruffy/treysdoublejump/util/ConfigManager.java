@@ -20,10 +20,6 @@ import java.util.regex.Pattern;
  */
 
 public class ConfigManager {
-
-    // Accesses the main class
-    private static final TreysDoubleJump plugin = TreysDoubleJump.getInstance();
-
     // Accesses the configuration
     public static FileConfiguration MainConfig;
 
@@ -52,12 +48,12 @@ public class ConfigManager {
 
     // Reloads the config
     public static void reloadConfig() {
-        MainConfigFile = new File(plugin.getDataFolder(), "config.yml");
+        MainConfigFile = new File(TreysDoubleJump.getInstance().getDataFolder(), "config.yml");
         if (!MainConfigFile.exists()) {
-            plugin.saveResource("config.yml", false);
+            TreysDoubleJump.getInstance().saveResource("config.yml", false);
         }
         MainConfig = YamlConfiguration.loadConfiguration(MainConfigFile);
-        InputStream configData = plugin.getResource("config.yml");
+        InputStream configData = TreysDoubleJump.getInstance().getResource("config.yml");
         if (configData != null) {
             MainConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(configData)));
         }

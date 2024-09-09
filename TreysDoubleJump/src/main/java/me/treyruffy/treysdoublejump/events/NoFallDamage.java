@@ -18,7 +18,7 @@ public class NoFallDamage implements Listener {
     // Cancels damage if no fall is enabled
     @EventHandler(priority = EventPriority.HIGH)
     public void noFall(EntityDamageEvent e) {
-        if ((!e.getCause().equals(DamageCause.FALL))) {
+        if (e.getCause() != DamageCause.FALL) {
             return;
         }
         if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled")) {
@@ -32,7 +32,7 @@ public class NoFallDamage implements Listener {
             e.setCancelled(false);
             return;
         }
-        if (DoubleJumpCommand.DISABLE_PLAYERS.contains(p.getUniqueId())) {
+        if (DoubleJumpCommand.DISABLED_PLAYERS.contains(p.getUniqueId())) {
             e.setCancelled(false);
         }
         if (ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
@@ -41,5 +41,4 @@ public class NoFallDamage implements Listener {
         }
         e.setCancelled(false);
     }
-
 }

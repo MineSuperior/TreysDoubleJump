@@ -111,13 +111,13 @@ Particles:
   # Do you want all players to see the player's particles when double jumping?
   Amount: 5
   # The amount of particles you want it to summon, if particles are enabled
-  # #If REDSTONE particles are used, you can set the RGB values using R G B!#
+  # #If DUST particles are used, you can set the RGB values using R G B!#
   R: 0
-  #Red value. (Leave as 0 if you are not using REDSTONE particles)
+  #Red value. (Leave as 0 if you are not using DUST particles)
   G: 0
-  #Green value. (Leave as 0 if you are not using REDSTONE particles)
+  #Green value. (Leave as 0 if you are not using DUST particles)
   B: 0
-  #Blue value. (Leave as 0 if you are not using REDSTONE particles)
+  #Blue value. (Leave as 0 if you are not using DUST particles)
 GroundPound:
   Enabled: true
   # Do you want players to be able to ground pound with tdj.groundpound
@@ -130,6 +130,3 @@ EnabledWorlds:
   # The worlds you want double jumping and no fall damage enabled in
 DisabledBlocks: [ ]
 # Blocks to disable the double jump, if standing on
-Metrics:
-  Enabled: true
-  # Do you want to enable metrics?

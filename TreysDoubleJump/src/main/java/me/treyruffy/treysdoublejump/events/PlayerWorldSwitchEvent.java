@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import java.util.UUID;
 
 /**
  * Created by TreyRuffy on 01/03/2021.
@@ -19,22 +20,26 @@ public class PlayerWorldSwitchEvent implements Listener {
     @EventHandler
     public void switchWorldEvent(PlayerChangedWorldEvent e) {
         Player p = e.getPlayer();
+        final UUID uuid = p.getUniqueId();
         if (!p.hasPermission("tdj.use")
                 || p.getGameMode() == GameMode.SPECTATOR
                 || p.getGameMode() == GameMode.CREATIVE
-                || DoubleJumpCommand.DISABLE_PLAYERS.contains(p.getUniqueId())) {
+                || DoubleJumpCommand.DISABLED_PLAYERS.contains(uuid)) {
             return;
         }
-        if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
-            if (FlightCommand.FLYING_PLAYERS.contains(p.getUniqueId())) {
-                p.setFallDistance(0f);
-                p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
-                FlightCommand.FLYING_PLAYERS.remove(p.getUniqueId());
-            }
-            p.setFlying(false);
-            p.setAllowFlight(false);
-            if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
-                p.setFlyingFallDamage(TriState.FALSE);
+
+        if (ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) return;
+
+        if (FlightCommand.FLYING_PLAYERS.contains(uuid)) {
+            p.setFallDistance(0f);
+            p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
+            FlightCommand.FLYING_PLAYERS.remove(uuid);
         }
+
+        p.setFlying(false);
+        p.setAllowFlight(false);
+
+        if (!ConfigManager.getConfig().getBoolean("NoFall.Enabled"))
+            p.setFlyingFallDamage(TriState.FALSE);
     }
 }

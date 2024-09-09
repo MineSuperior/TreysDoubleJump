@@ -76,5 +76,4 @@ public class UpdateManager {
         ConfigManager.getConfig().set("Version", TreysDoubleJump.getInstance().getDescription().getVersion());
         ConfigManager.saveConfig();
     }
-
 }

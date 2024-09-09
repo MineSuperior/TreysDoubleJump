@@ -27,11 +27,11 @@ public class FlightAPI {
      * @param enabled sets flight to enabled if true
      */
     public static void setFlight(Player player, Boolean enabled) {
-        if (!enabled) {
-            FlightCommand.FLYING_PLAYERS.add(player.getUniqueId());
-        } else {
+        if (enabled) {
             FlightCommand.FLYING_PLAYERS.remove(player.getUniqueId());
+            return;
         }
-    }
 
+        FlightCommand.FLYING_PLAYERS.add(player.getUniqueId());
+    }
 }
