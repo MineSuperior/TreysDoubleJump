@@ -1,7 +1,6 @@
 package me.treyruffy.treysdoublejump.events;
 
-import me.treyruffy.treysdoublejump.commands.DoubleJumpCommand;
-import me.treyruffy.treysdoublejump.commands.FlightCommand;
+import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.GameMode;
@@ -24,16 +23,16 @@ public class PlayerWorldSwitchEvent implements Listener {
         if (!p.hasPermission("tdj.use")
                 || p.getGameMode() == GameMode.SPECTATOR
                 || p.getGameMode() == GameMode.CREATIVE
-                || DoubleJumpCommand.DISABLED_PLAYERS.contains(uuid)) {
+                || TreysDoubleJump.DISABLED.contains(uuid)) {
             return;
         }
 
         if (ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) return;
 
-        if (FlightCommand.FLYING_PLAYERS.contains(uuid)) {
+        if (TreysDoubleJump.FLYING.contains(uuid)) {
             p.setFallDistance(0f);
             p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
-            FlightCommand.FLYING_PLAYERS.remove(uuid);
+            TreysDoubleJump.FLYING.remove(uuid);
         }
 
         p.setFlying(false);

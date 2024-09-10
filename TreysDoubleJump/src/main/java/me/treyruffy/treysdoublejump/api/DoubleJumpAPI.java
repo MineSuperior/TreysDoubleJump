@@ -1,8 +1,7 @@
 package me.treyruffy.treysdoublejump.api;
 
+import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.events.DoubleJump;
-import me.treyruffy.treysdoublejump.commands.DoubleJumpCommand;
-import me.treyruffy.treysdoublejump.commands.GroundPoundCommand;
 import org.bukkit.entity.Player;
 
 /* Created by TreyRuffy on 08/12/2018. */
@@ -34,7 +33,7 @@ public class DoubleJumpAPI {
      */
     // Accesses whether the player can double jump or not
     public static Boolean isDoubleJumpEnabled(Player player) {
-        return !DoubleJumpCommand.DISABLED_PLAYERS.contains(player.getUniqueId());
+        return !TreysDoubleJump.DISABLED.contains(player.getUniqueId());
     }
 
     /**
@@ -46,11 +45,11 @@ public class DoubleJumpAPI {
     // Sets whether the player can double jump or not
     public static void setDoubleJump(Player player, Boolean enabled) {
         if (enabled) {
-            DoubleJumpCommand.DISABLED_PLAYERS.remove(player.getUniqueId());
+            TreysDoubleJump.DISABLED.remove(player.getUniqueId());
             return;
         }
 
-        DoubleJumpCommand.DISABLED_PLAYERS.add(player.getUniqueId());
+        TreysDoubleJump.DISABLED.add(player.getUniqueId());
     }
 
     /**
@@ -61,7 +60,7 @@ public class DoubleJumpAPI {
      */
     // Accesses whether the player has access to ground pound
     public static Boolean isGroundPoundEnabled(Player player) {
-        return !GroundPoundCommand.GROUND_POUND_DISABLED.contains(player.getUniqueId());
+        return !TreysDoubleJump.DISABLED_GROUND_POUNDING.contains(player.getUniqueId());
     }
 
     /**
@@ -85,10 +84,10 @@ public class DoubleJumpAPI {
     // Sets whether the player can or cannot use ground pound
     public static void setGroundPound(Player player, Boolean enabled) {
         if (enabled) {
-            GroundPoundCommand.GROUND_POUND_DISABLED.remove(player.getUniqueId());
+            TreysDoubleJump.DISABLED_GROUND_POUNDING.remove(player.getUniqueId());
             return;
         }
 
-        GroundPoundCommand.GROUND_POUND_DISABLED.add(player.getUniqueId());
+        TreysDoubleJump.DISABLED_GROUND_POUNDING.add(player.getUniqueId());
     }
 }

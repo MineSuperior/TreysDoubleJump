@@ -58,16 +58,3 @@ permissions:
   tdj.fly.toggleothers:
     default: op
     description: Allows you to toggle other people's flight
-commands:
-  tdj:
-    description: Allows you to toggle double jumping.
-    aliases: [ dj, doublejump, treysdoublejump ]
-  fly:
-    description: Allows you to fly!
-    aliases: [ flight, togglefly, toggleflight ]
-  groundpound:
-    description: Allows you to toggle ground pounding
-    aliases: [ togglegroundpound ]
-  djreload:
-    description: Allows you to reload the configs
-    aliases: [ doublejumpreload ]

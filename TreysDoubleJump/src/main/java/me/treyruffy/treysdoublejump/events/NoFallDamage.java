@@ -1,6 +1,6 @@
 package me.treyruffy.treysdoublejump.events;
 
-import me.treyruffy.treysdoublejump.commands.DoubleJumpCommand;
+import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,7 @@ public class NoFallDamage implements Listener {
             e.setCancelled(false);
             return;
         }
-        if (DoubleJumpCommand.DISABLED_PLAYERS.contains(p.getUniqueId())) {
+        if (TreysDoubleJump.DISABLED.contains(p.getUniqueId())) {
             e.setCancelled(false);
         }
         if (ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {

@@ -5,9 +5,6 @@ import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import me.treyruffy.treysdoublejump.api.DoubleJumpEvent;
 import me.treyruffy.treysdoublejump.api.GroundPoundEvent;
 import me.treyruffy.treysdoublejump.api.PreDoubleJumpEvent;
-import me.treyruffy.treysdoublejump.commands.DoubleJumpCommand;
-import me.treyruffy.treysdoublejump.commands.FlightCommand;
-import me.treyruffy.treysdoublejump.commands.GroundPoundCommand;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.GameMode;
@@ -73,8 +70,8 @@ public class DoubleJump implements Listener {
             }
         }
         if (COOLDOWN.containsKey(uuid)
-                || DoubleJumpCommand.DISABLED_PLAYERS.contains(uuid)
-                || FlightCommand.FLYING_PLAYERS.contains(uuid)) {
+                || TreysDoubleJump.DISABLED.contains(uuid)
+                || TreysDoubleJump.FLYING.contains(uuid)) {
             return;
         }
         if (!ConfigManager.getConfig().getBoolean("InfiniteJump.Enabled") || !p.hasPermission("tdj.infinitejump")) {
@@ -106,13 +103,13 @@ public class DoubleJump implements Listener {
     public void onPlayerToggleFlight(PlayerToggleFlightEvent e) {
         final Player p = e.getPlayer();
         final UUID uuid = p.getUniqueId();
-        if (FlightCommand.FLYING_PLAYERS.contains(uuid)
+        if (TreysDoubleJump.FLYING.contains(uuid)
                 || COOLDOWN.containsKey(uuid)
                 || p.getGameMode() == GameMode.SPECTATOR
                 || p.getGameMode() == GameMode.CREATIVE
                 || !p.hasPermission("tdj.use")
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())
-                || DoubleJumpCommand.DISABLED_PLAYERS.contains(uuid)) {
+                || TreysDoubleJump.DISABLED.contains(uuid)) {
             return;
         }
 
@@ -161,7 +158,7 @@ public class DoubleJump implements Listener {
             return;
         }
 
-        if (!GroundPoundCommand.GROUND_POUND_DISABLED.contains(uuid)) {
+        if (!TreysDoubleJump.DISABLED_GROUND_POUNDING.contains(uuid)) {
             GROUNDED.add(uuid);
         }
 
@@ -205,8 +202,8 @@ public class DoubleJump implements Listener {
                 || !p.hasPermission("tdj.groundpound")
                 || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())
                 || !GROUNDED.contains(p.getUniqueId())
-                || FlightCommand.FLYING_PLAYERS.contains(p.getUniqueId())
-                || DoubleJumpCommand.DISABLED_PLAYERS.contains(p.getUniqueId())) {
+                || TreysDoubleJump.FLYING.contains(p.getUniqueId())
+                || TreysDoubleJump.DISABLED.contains(p.getUniqueId())) {
             return;
         }
 
@@ -214,7 +211,7 @@ public class DoubleJump implements Listener {
         double velocityDown = ConfigManager.getConfig().getDouble("GroundPound.VelocityDown");
 
         GroundPoundEvent groundPoundEvent = new GroundPoundEvent(p, isCancelled, velocityDown);
-        if (!groundPoundEvent.callEvent() || GroundPoundCommand.GROUND_POUND_DISABLED.contains(p.getUniqueId())) {
+        if (!groundPoundEvent.callEvent() || TreysDoubleJump.DISABLED_GROUND_POUNDING.contains(p.getUniqueId())) {
             return;
         }
 

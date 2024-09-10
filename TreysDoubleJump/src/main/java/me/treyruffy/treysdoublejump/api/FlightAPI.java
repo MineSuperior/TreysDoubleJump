@@ -1,6 +1,6 @@
 package me.treyruffy.treysdoublejump.api;
 
-import me.treyruffy.treysdoublejump.commands.FlightCommand;
+import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import org.bukkit.entity.Player;
 
 /* Created by TreyRuffy on 08/12/2018. */
@@ -17,7 +17,7 @@ public class FlightAPI {
      * @return flight enabled for the player
      */
     public static Boolean isFlightEnabled(Player player) {
-        return FlightCommand.FLYING_PLAYERS.contains(player.getUniqueId());
+        return TreysDoubleJump.FLYING.contains(player.getUniqueId());
     }
 
     /**
@@ -28,10 +28,10 @@ public class FlightAPI {
      */
     public static void setFlight(Player player, Boolean enabled) {
         if (enabled) {
-            FlightCommand.FLYING_PLAYERS.remove(player.getUniqueId());
+            TreysDoubleJump.FLYING.remove(player.getUniqueId());
             return;
         }
 
-        FlightCommand.FLYING_PLAYERS.add(player.getUniqueId());
+        TreysDoubleJump.FLYING.add(player.getUniqueId());
     }
 }
