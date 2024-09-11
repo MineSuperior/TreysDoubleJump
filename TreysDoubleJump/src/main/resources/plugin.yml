@@ -1,9 +1,0 @@
-main: me.treyruffy.treysdoublejump.TreysDoubleJump
-version: ${project.parent.version}
-name: ${project.name}
-author: TreyRuffy
-description: ${project.description}
-website: ${project.url}
-prefix: "Trey's Double Jump"
-softdepend: [ PlaceholderAPI, MVdWPlaceholderAPI ]
-api-version: "1.21"

@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type Pre double jump event.
  */
-@SuppressWarnings("unused")
 public class PreDoubleJumpEvent extends Event implements Cancellable {
 
     private final Player player;

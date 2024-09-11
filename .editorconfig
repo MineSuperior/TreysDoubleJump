@@ -9,6 +9,9 @@ ij_any_block_comment_at_first_column = false
 ij_any_line_comment_at_first_column = false
 ij_any_line_comment_add_space = true
 
+[*.bat]
+end_of_line=crlf
+
 [*.yml]
 indent_size=2
 

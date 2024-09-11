@@ -35,7 +35,7 @@ public class UpdateManager {
             TreysDoubleJump.getInstance().getLogger().log(Level.WARNING, "Error when updating config", e);
         }
 
-        int lastVersion = Integer.parseInt(Objects.requireNonNull(ConfigManager.getConfig().getString("Version")).replace(".", ""));
+        int lastVersion = Integer.parseInt(Objects.requireNonNull(ConfigManager.getConfig().getString("Version")).replace(".", "").replace("-SNAPSHOT", ""));
 
         if (lastVersion < 263) {
             ConfigManager.getConfig().set("Messages.PlayerNotFound", "&c[user] is not online.");

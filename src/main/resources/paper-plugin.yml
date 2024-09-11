@@ -1,0 +1,13 @@
+name: "$name"
+version: "$version"
+main: "$main"
+api-version: "$apiVersion"
+authors: ["TreyRuffy", "Yive"]
+description: "$description"
+website: "$website"
+prefix: "Trey's Double Jump"
+dependencies:
+  server:
+    PlaceholderAPI:
+      load: BEFORE
+      required: false

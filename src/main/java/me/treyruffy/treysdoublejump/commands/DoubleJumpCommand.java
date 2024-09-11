@@ -147,9 +147,24 @@ public class DoubleJumpCommand extends Command {
             }
         }
 
-        sender.sendMessage(sender instanceof Player ?
-            ConfigManager.getConfigMessage("InvalidArgument") :
-            ConfigManager.getConfigMessage("InvalidArgumentConsole"));
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ConfigManager.getConfigMessage("PlayersOnly"));
+            return true;
+        }
+
+        if (TreysDoubleJump.DISABLED.contains(player.getUniqueId()) || TreysDoubleJump.FLYING.contains(player.getUniqueId())) {
+            if (checkWorldAndPerm(player))
+                return true;
+
+            if (addEnabledPlayer(player))
+                player.sendMessage(ConfigManager.getConfigMessage("ToggledOn"));
+
+            return true;
+        }
+
+        if (addDisabledPlayer(player))
+            player.sendMessage(ConfigManager.getConfigMessage("ToggledOff"));
+
         return true;
     }
 
