@@ -10,10 +10,14 @@ import me.treyruffy.treysdoublejump.events.PlayerWorldSwitchEvent;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import me.treyruffy.treysdoublejump.util.PAPI;
 import me.treyruffy.treysdoublejump.util.UpdateManager;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,6 +52,35 @@ public class TreysDoubleJump extends JavaPlugin {
         ConfigManager.reloadConfig();
         new UpdateManager().setup();
         PluginManager pm = getServer().getPluginManager();
+
+        // Register our permissions (Better compatibility with LuckPerms web panel)
+        List<Permission> permissions = new ArrayList<>();
+        permissions.add(new Permission("tdj.use", "Use the double jump feature.", PermissionDefault.TRUE));
+        permissions.add(new Permission("tdj.sounds", "Sounds whilst double jumping.", PermissionDefault.TRUE));
+        permissions.add(new Permission("tdj.particles", "Particles whilst double jumping.", PermissionDefault.TRUE));
+        permissions.add(new Permission("tdj.command", "Allows players to toggle their double jump.", PermissionDefault.TRUE));
+        permissions.add(new Permission("tdj.nofall", "No fall when you have double jump on.", PermissionDefault.TRUE));
+        permissions.add(new Permission("tdj.groundpound", "Allows players to ground pound.", PermissionDefault.TRUE));
+        permissions.add(new Permission("tdj.groundpoundcommand", "Allows players to toggle their ground pounding.", PermissionDefault.TRUE));
+        permissions.add(new Permission("tdj.infinitejump", "Sounds whilst double jumping.", PermissionDefault.TRUE));
+        permissions.add(new Permission("tdj.fly", "Allows you to fly!", PermissionDefault.OP));
+        permissions.add(new Permission("tdj.toggleothers", "Allows you to toggle other people's double jump.", PermissionDefault.OP));
+        permissions.add(new Permission("tdj.fly.toggleothers", "Allows you to toggle other people's flight.", PermissionDefault.OP));
+        permissions.add(new Permission("tdj.*", "Get granted all the double jump permissions.", PermissionDefault.OP,
+            Map.of(
+                "tdj.use", true,
+                "tdj.sounds", true,
+                "tdj.particles", true,
+                "tdj.command", true,
+                "tdj.nofall", true,
+                "tdj.fly", true,
+                "tdj.groundpound", true,
+                "tdj.groundpoundcommand", true,
+                "tdj.infinitejump", true
+            )
+        ));
+        pm.addPermissions(permissions);
+
         pm.registerEvents(new DoubleJump(), this);
         pm.registerEvents(new NoFallDamage(), this);
         pm.registerEvents(new PlayerWorldSwitchEvent(), this);
@@ -60,6 +93,7 @@ public class TreysDoubleJump extends JavaPlugin {
                 new ReloadCommand()
             )
         );
+
 
         if (pm.getPlugin("PlaceholderAPI") == null) return;
         new PAPI().register();
