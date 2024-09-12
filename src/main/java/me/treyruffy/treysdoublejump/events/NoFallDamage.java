@@ -35,7 +35,7 @@ public class NoFallDamage implements Listener {
         if (TreysDoubleJump.DISABLED.contains(p.getUniqueId())) {
             e.setCancelled(false);
         }
-        if (ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
+        if (ConfigManager.getEnabledWorlds().contains(p.getWorld().getName())) {
             e.setCancelled(true);
             return;
         }

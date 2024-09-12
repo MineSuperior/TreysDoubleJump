@@ -8,6 +8,7 @@ import me.treyruffy.treysdoublejump.api.PreDoubleJumpEvent;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /**
  * Created by TreyRuffy on 08/12/2018.
@@ -53,21 +53,17 @@ public class DoubleJump implements Listener {
                 || !p.hasPermission("tdj.use")
                 || p.getGameMode() == GameMode.SPECTATOR
                 || p.getGameMode() == GameMode.CREATIVE
-                || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
+                || !ConfigManager.getEnabledWorlds().contains(p.getWorld().getName())) {
             return;
         }
         final UUID uuid = p.getUniqueId();
-        if (!ConfigManager.getConfig().getStringList("DisabledBlocks").isEmpty()) {
-            for (String blocks : ConfigManager.getConfig().getStringList("DisabledBlocks")) {
-                try {
-                    if (p.getWorld().getBlockAt(p.getLocation().add(0, -1, 0)).getType() == Material.valueOf(blocks.toUpperCase()) || p.getWorld().getBlockAt(p.getLocation()).getType() == Material.valueOf(blocks.toUpperCase())) {
-                        GROUNDED.remove(uuid);
-                        return;
-                    }
-                } catch (Exception ex) {
-                    TreysDoubleJump.getInstance().getLogger().log(Level.WARNING, "Error occurred with DisabledBlocks list", ex);
-                }
-            }
+        final Location location = p.getLocation();
+        Material below = null, at = null;
+        if (!ConfigManager.getDisabledBlocks().isEmpty()
+            && (ConfigManager.getDisabledBlocks().contains(below = location.clone().add(0, -1, 0).getBlock().getType())
+            || ConfigManager.getDisabledBlocks().contains(at = location.getBlock().getType()))) {
+            GROUNDED.remove(uuid);
+            return;
         }
         if (COOLDOWN.containsKey(uuid)
                 || TreysDoubleJump.DISABLED.contains(uuid)
@@ -75,7 +71,7 @@ public class DoubleJump implements Listener {
             return;
         }
         if (!ConfigManager.getConfig().getBoolean("InfiniteJump.Enabled") || !p.hasPermission("tdj.infinitejump")) {
-            if (!p.isOnGround() || (p.getWorld().getBlockAt(p.getLocation().add(0, -1, 0)).getType() == Material.AIR && p.getWorld().getBlockAt(p.getLocation()).getType() == Material.AIR)) {
+            if (!p.isOnGround() || ((below == null ? p.getWorld().getBlockAt(location.clone().add(0, -1, 0)).getType() : below) == Material.AIR && (at == null ? p.getWorld().getBlockAt(location).getType() : at) == Material.AIR)) {
                 return;
             }
 
@@ -108,7 +104,7 @@ public class DoubleJump implements Listener {
                 || p.getGameMode() == GameMode.SPECTATOR
                 || p.getGameMode() == GameMode.CREATIVE
                 || !p.hasPermission("tdj.use")
-                || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())
+                || !ConfigManager.getEnabledWorlds().contains(p.getWorld().getName())
                 || TreysDoubleJump.DISABLED.contains(uuid)) {
             return;
         }
@@ -200,7 +196,7 @@ public class DoubleJump implements Listener {
                 || p.getGameMode() == GameMode.CREATIVE
                 || !p.hasPermission("tdj.use")
                 || !p.hasPermission("tdj.groundpound")
-                || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())
+                || !ConfigManager.getEnabledWorlds().contains(p.getWorld().getName())
                 || !GROUNDED.contains(p.getUniqueId())
                 || TreysDoubleJump.FLYING.contains(p.getUniqueId())
                 || TreysDoubleJump.DISABLED.contains(p.getUniqueId())) {

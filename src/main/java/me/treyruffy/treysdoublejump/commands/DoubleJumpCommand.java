@@ -196,7 +196,7 @@ public class DoubleJumpCommand extends Command {
         TreysDoubleJump.DISABLED.add(player.getUniqueId());
         if (player.getGameMode() == GameMode.CREATIVE
                 || player.getGameMode() == GameMode.SPECTATOR
-                || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains((player).getWorld().getName())) {
+                || !ConfigManager.getEnabledWorlds().contains((player).getWorld().getName())) {
             return true;
         }
 
@@ -219,7 +219,7 @@ public class DoubleJumpCommand extends Command {
         TreysDoubleJump.DISABLED.remove(player.getUniqueId());
         if (player.getGameMode() == GameMode.CREATIVE
                 || player.getGameMode() == GameMode.SPECTATOR
-                || !ConfigManager.getConfig().getStringList("EnabledWorlds").contains((player).getWorld().getName())) {
+                || !ConfigManager.getEnabledWorlds().contains((player).getWorld().getName())) {
             return true;
         }
 
@@ -230,7 +230,7 @@ public class DoubleJumpCommand extends Command {
 
     // Returns false if the player is not in the correct world or doesn't have permissions
     private boolean checkWorldAndPerm(Player player) {
-        if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains((player).getWorld().getName())) {
+        if (!ConfigManager.getEnabledWorlds().contains((player).getWorld().getName())) {
             player.sendMessage(ConfigManager.getConfigMessage("NotInWorld"));
             return true;
         }

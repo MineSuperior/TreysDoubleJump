@@ -27,7 +27,7 @@ public class PlayerWorldSwitchEvent implements Listener {
             return;
         }
 
-        if (ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) return;
+        if (ConfigManager.getEnabledWorlds().contains(p.getWorld().getName())) return;
 
         if (TreysDoubleJump.FLYING.contains(uuid)) {
             p.setFallDistance(0f);

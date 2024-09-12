@@ -56,7 +56,7 @@ public class FlightCommand extends Command {
                         return true;
                     }
 
-                    if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
+                    if (!ConfigManager.getEnabledWorlds().contains(p.getWorld().getName())) {
                         p.sendMessage(ConfigManager.getConfigMessage("NotInWorld"));
                         return true;
                     }
@@ -85,7 +85,7 @@ public class FlightCommand extends Command {
                         p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
                         addDisabledFlightPlayer(p);
                     } else {
-                        if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
+                        if (!ConfigManager.getEnabledWorlds().contains(p.getWorld().getName())) {
                             p.sendMessage(ConfigManager.getConfigMessage("NotInWorld"));
                             return true;
                         }
@@ -150,7 +150,7 @@ public class FlightCommand extends Command {
             p.sendMessage(ConfigManager.getConfigMessage("FlyToggledOff"));
             addDisabledFlightPlayer(p);
         } else {
-            if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains(p.getWorld().getName())) {
+            if (!ConfigManager.getEnabledWorlds().contains(p.getWorld().getName())) {
                 p.sendMessage(ConfigManager.getConfigMessage("NotInWorld"));
                 return true;
             }

@@ -29,7 +29,7 @@ public class GroundPoundCommand extends Command {
             return true;
         }
 
-        if (!ConfigManager.getConfig().getStringList("EnabledWorlds").contains(player.getWorld().getName())) {
+        if (!ConfigManager.getEnabledWorlds().contains(player.getWorld().getName())) {
             player.sendMessage(ConfigManager.getConfigMessage("NotInWorld"));
             return true;
         }

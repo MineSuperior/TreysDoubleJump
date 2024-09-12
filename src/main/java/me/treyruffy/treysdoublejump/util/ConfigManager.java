@@ -2,8 +2,9 @@ package me.treyruffy.treysdoublejump.util;
 
 import me.treyruffy.treysdoublejump.TreysDoubleJump;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,9 +12,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by TreyRuffy on 08/12/2018.
@@ -25,6 +27,17 @@ public class ConfigManager {
 
     // Accesses the configuration file
     public static File MainConfigFile;
+
+    private static final Set<String> enabledWorlds = new HashSet<>();
+    private static final Set<Material> disabledBlocks = new HashSet<>();
+
+    public static Set<String> getEnabledWorlds() {
+        return enabledWorlds;
+    }
+
+    public static Set<Material> getDisabledBlocks() {
+        return disabledBlocks;
+    }
 
     // Gets the config
     public static FileConfiguration getConfig() {
@@ -57,36 +70,17 @@ public class ConfigManager {
         if (configData != null) {
             MainConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(configData)));
         }
+        enabledWorlds.clear();
+        enabledWorlds.addAll(getConfig().getStringList("EnabledWorlds"));
+        disabledBlocks.clear();
+        disabledBlocks.addAll(getConfig().getStringList("DisabledBlocks").stream().map(Material::matchMaterial).filter(Objects::nonNull).toList());
     }
 
     public static Component getConfigMessage(String message) {
-        String oldConfigMessage = getOldConfigMessage(message);
+        String oldConfigMessage = getConfig().getString("Messages." + message);
+        if (oldConfigMessage == null) {
+            return Component.text("Messages." + message + " is not set in the config.", NamedTextColor.RED);
+        }
         return MiniMessage.miniMessage().deserialize(oldConfigMessage);
-    }
-
-    private static String getOldConfigMessage(String message) {
-        String messageFromConfig = getConfig().getString("Messages." + message);
-        if (messageFromConfig == null) {
-            return ChatColor.RED + "Messages. " + message + " is not set in the config.";
-        }
-        return ChatColor.translateAlternateColorCodes('&', translateHexCodes(messageFromConfig));
-    }
-
-    static final Pattern hexPattern = Pattern.compile("#([A-Fa-f0-9]{6})");
-    static final char COLOR_CHAR = ChatColor.COLOR_CHAR;
-
-    // Thank you https://www.spigotmc.org/threads/hex-color-code-translate.449748/#post-3867804
-    public static String translateHexCodes(String text) {
-        Matcher matcher = hexPattern.matcher(text);
-        StringBuilder buffer = new StringBuilder(text.length() + 4 * 8);
-        while (matcher.find()) {
-            String group = matcher.group(1);
-            matcher.appendReplacement(buffer, COLOR_CHAR + "x"
-                    + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
-                    + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
-                    + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
-            );
-        }
-        return matcher.appendTail(buffer).toString();
     }
 }
