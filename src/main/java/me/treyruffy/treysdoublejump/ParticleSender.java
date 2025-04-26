@@ -4,7 +4,9 @@ import com.destroystokyo.paper.ParticleBuilder;
 import me.treyruffy.treysdoublejump.util.ConfigManager;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
 public class ParticleSender {
     public static void sendParticle(List<Player> players, String particle, Location loc, int amount, float r, float g, float b) {
         if (players == null && !ConfigManager.getConfig().getBoolean("Particles.AllPlayers")) return;
-        final ParticleBuilder builder = new ParticleBuilder(Particle.valueOf(particle));
+        final ParticleBuilder builder = new ParticleBuilder(Registry.PARTICLE_TYPE.get(NamespacedKey.fromString(ConfigManager.bukkitToMinecraft(particle, "minecraft:poof"))));
         builder.receivers(players);
         builder.location(loc);
         builder.count(amount);

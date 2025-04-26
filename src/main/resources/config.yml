@@ -16,55 +16,55 @@
 # +-----------------------------------------------------------------------------------+
 # ------------------------------------------------------------------------------------- #
 Messages:
-  ToggledOff: '&6You have &c&ldisabled &6your double jump!'
+  ToggledOff: '<gold>You have </gold><bold><red>disabled </red></bold><gold>your double jump!'
   # Disabled message
-  FlyToggledOff: '&6You have &c&ldisabled&6 your flight!'
+  FlyToggledOff: '<gold>You have </gold><bold><red>disabled</red></bold><gold> your flight!'
   # Disabled message for fly
-  GroundPoundToggledOff: '&6You have &c&ldisabled&6 your ground pound!'
+  GroundPoundToggledOff: '<gold>You have </gold><bold><red>disabled</red></bold><gold> your ground pound!'
   # Disabled message for ground pound
-  ToggledOn: '&6You have &a&lenabled &6your double jump!'
+  ToggledOn: '<gold>You have </gold><bold><green>enabled </green></bold><gold>your double jump!'
   # Enabled message
-  FlyToggledOn: '&6You have &a&lenabled&6 your flight!'
+  FlyToggledOn: '<gold>You have </gold><bold><green>enabled</green></bold><gold> your flight!'
   # Enabled message for fly
-  GroundPoundToggledOn: '&6You have &a&lenabled&6 your ground pound!'
+  GroundPoundToggledOn: '<gold>You have </gold><bold><green>enabled</green></bold><gold> your ground pound!'
   # Enabled message for ground pound
-  PlayersOnly: '&cYou must be a player to execute this command.'
+  PlayersOnly: '<red>You must be a player to execute this command.'
   # Saying only players can execute the command
-  NoPermission: '&cYou do not have permission to execute this command.'
+  NoPermission: '<red>You do not have permission to execute this command.'
   # No permissions for the command.
-  FlyCommandDisabled: '&dThe fly command is disabled'
+  FlyCommandDisabled: '<light_purple>The fly command is disabled'
   # If Flight is disabled below, you will receive this message
-  NotInWorld: '&cYou cannot do that in this world.'
+  NotInWorld: '<red>You cannot do that in this world.'
   # If the player is not in one of the listed worlds below and tried to execute a command.
-  PlayerNotFound: '&c[user] is not online.'
+  PlayerNotFound: '<red>[user] is not online.'
   # Sent if the player is not online
-  ToggledOnOther: '&6You have &a&lenabled &6double jump for [user]!'
+  ToggledOnOther: '<gold>You have </gold><bold><green>enabled </green></bold><gold>double jump for [user]!'
   # Message sent if you enable double jump for another player
-  ToggledOffOther: '&6You have &c&ldisabled &6double jump for [user]!'
+  ToggledOffOther: '<gold>You have </gold><bold><red>disabled </red></bold><gold>double jump for [user]!'
   # Message sent if you disable double jump for another player
-  InvalidArgument: '&cInvalid argument: Please do /tdj [enable/disable]'
+  InvalidArgument: '<red>Invalid argument: Please do /tdj [enable/disable]'
   # Message sent if you have invalid arguments
-  InvalidArgumentConsole: '&cInvalid argument: Please do /tdj <username> [enable/disable]'
+  InvalidArgumentConsole: '<red>Invalid argument: Please do /tdj <username> [enable/disable]'
   # Message sent if console has invalid arguments
-  InvalidArgumentWithOther: '&cInvalid argument: Please do /tdj [username] [enable/disable]'
+  InvalidArgumentWithOther: '<red>Invalid argument: Please do /tdj [username] [enable/disable]'
   # Message sent if you have invalid arguments with permission to set another players double jump
-  InvalidFlyArgument: '&cInvalid argument: Please do /fly [enable/disable]'
+  InvalidFlyArgument: '<red>Invalid argument: Please do /fly [enable/disable]'
   # Message sent if you have invalid arguments for the flight command
-  InvalidFlyArgumentConsole: '&cInvalid argument: Please do /fly <username> [enable/disable]'
+  InvalidFlyArgumentConsole: '<red>Invalid argument: Please do /fly <username> [enable/disable]'
   # Message sent if console has invalid arguments for the flight command
-  InvalidFlyArgumentWithOther: '&cInvalid argument: Please do /fly [username] [enable/disable]'
+  InvalidFlyArgumentWithOther: '<red>Invalid argument: Please do /fly [username] [enable/disable]'
   # Message sent if you have invalid arguments with permission to set another players flight
-  FlyToggledOnOther: '&6You have &a&lenabled &6flight for [user]!'
+  FlyToggledOnOther: '<gold>You have </gold><bold><green>enabled </green></bold><gold>flight for [user]!'
   # Message sent if you enable flight for another player
-  FlyToggledOffOther: '&6You have &c&ldisabled &6flight for [user]!'
+  FlyToggledOffOther: '<gold>You have </gold><bold><red>disabled </red></bold><gold>flight for [user]!'
   # Message sent if you disable flight for another player
-  FlightToggledOn: '&6Your flight has been &a&lenabled&6!'
+  FlightToggledOn: '<gold>Your flight has been </gold><bold><green>enabled</green></bold><gold>!'
   # Message sent when another player enables your flight
-  FlightToggledOff: '&6Your flight has been &c&ldisabled&6!'
+  FlightToggledOff: '<gold>Your flight has been </gold><bold><red>disabled</red></bold><gold>!'
   # Message sent when another player disables your flight
-  DoubleJumpToggledOn: '&6Your double jump has been &a&lenabled&6!'
+  DoubleJumpToggledOn: '<gold>Your double jump has been </gold><bold><green>enabled</green></bold><gold>!'
   # Message sent when another player enables your double jump
-  DoubleJumpToggledOff: '&6Your double jump has been &c&ldisabled&6!'
+  DoubleJumpToggledOff: '<gold>Your double jump has been </gold><bold><red>disabled</red></bold><gold>!'
   # Message sent when another player disables your double jump
 Flight:
   Enabled: true
@@ -91,7 +91,7 @@ Velocity:
 Sounds:
   Enabled: true
   # Do you want players with tdj.sounds to play sounds when double jumping?
-  Type: ENTITY_BAT_TAKEOFF
+  Type: "minecraft:entity.bat.takeoff"
   # The type of sound played if the above option is true
   Volume: 1.0
   # The volume of the sound
@@ -100,7 +100,7 @@ Sounds:
 Particles:
   Enabled: true
   # Do you want players with tdj.particles to summon particles when double jumping?
-  Type: EXPLOSION_NORMAL
+  Type: "minecraft:poof"
   # The type of particle played if the above option is true
   AllPlayers: true
   # Do you want all players to see the player's particles when double jumping?

@@ -49,6 +49,7 @@ public class TreysDoubleJump extends JavaPlugin {
     // Sets up everything
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         ConfigManager.reloadConfig();
         new UpdateManager().setup();
         PluginManager pm = getServer().getPluginManager();

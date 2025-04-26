@@ -6,28 +6,18 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Level;
 
 /**
  * Created by TreyRuffy on 08/12/2018.
  */
 
 public class ConfigManager {
-    // Accesses the configuration
-    public static FileConfiguration MainConfig;
-
-    // Accesses the configuration file
-    public static File MainConfigFile;
-
     private static final Set<String> enabledWorlds = new HashSet<>();
     private static final Set<Material> disabledBlocks = new HashSet<>();
 
@@ -41,35 +31,17 @@ public class ConfigManager {
 
     // Gets the config
     public static FileConfiguration getConfig() {
-        if (MainConfig == null) {
-            reloadConfig();
-        }
-        return MainConfig;
+        return TreysDoubleJump.getInstance().getConfig();
     }
 
     // Saves the config
     public static void saveConfig() {
-        if (MainConfig == null) {
-            throw new NullPointerException("Cannot save a non-existent file!");
-        }
-        try {
-            MainConfig.save(MainConfigFile);
-        } catch (IOException e) {
-            TreysDoubleJump.getInstance().getLogger().log(Level.SEVERE, "Could not save " + MainConfigFile + ".", e);
-        }
+        TreysDoubleJump.getInstance().saveConfig();
     }
 
     // Reloads the config
     public static void reloadConfig() {
-        MainConfigFile = new File(TreysDoubleJump.getInstance().getDataFolder(), "config.yml");
-        if (!MainConfigFile.exists()) {
-            TreysDoubleJump.getInstance().saveResource("config.yml", false);
-        }
-        MainConfig = YamlConfiguration.loadConfiguration(MainConfigFile);
-        InputStream configData = TreysDoubleJump.getInstance().getResource("config.yml");
-        if (configData != null) {
-            MainConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(configData)));
-        }
+        TreysDoubleJump.getInstance().reloadConfig();
         enabledWorlds.clear();
         enabledWorlds.addAll(getConfig().getStringList("EnabledWorlds"));
         disabledBlocks.clear();
@@ -82,5 +54,15 @@ public class ConfigManager {
             return Component.text("Messages." + message + " is not set in the config.", NamedTextColor.RED);
         }
         return MiniMessage.miniMessage().deserialize(oldConfigMessage);
+    }
+
+    public static String bukkitToMinecraft(@Nullable String s, String def) {
+        if (s == null) return def;
+
+        final String lowerCase = s.toLowerCase(Locale.ROOT);
+        return (!lowerCase.startsWith("minecraft:")
+            ? "minecraft:" + lowerCase
+            : lowerCase
+        ).replace("_", "."); // Bukkit sounds were just the same as Mojang's, but with underscores.
     }
 }

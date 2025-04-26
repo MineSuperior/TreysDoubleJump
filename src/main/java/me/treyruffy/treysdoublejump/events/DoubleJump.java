@@ -127,7 +127,7 @@ public class DoubleJump implements Listener {
         boolean soundsEnabled = ((p.hasPermission("tdj.sounds")) && (ConfigManager.getConfig().getBoolean("Sounds" +
                 ".Enabled")));
 
-        Sound sound = Registry.SOUNDS.get(NamespacedKey.fromString(ConfigManager.getConfig().getString("Sounds.Type")));
+        Sound sound = Registry.SOUNDS.get(NamespacedKey.fromString(ConfigManager.getConfig().getString("Sounds.Type", "minecraft:entity.bat.takeoff")));
         float volume = (float) ConfigManager.getConfig().getDouble("Sounds.Volume");
         float pitch = (float) ConfigManager.getConfig().getDouble("Sounds.Pitch");
 
