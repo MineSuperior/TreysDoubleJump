@@ -10,6 +10,8 @@ import net.kyori.adventure.util.TriState;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -125,7 +127,7 @@ public class DoubleJump implements Listener {
         boolean soundsEnabled = ((p.hasPermission("tdj.sounds")) && (ConfigManager.getConfig().getBoolean("Sounds" +
                 ".Enabled")));
 
-        Sound sound = Sound.valueOf(ConfigManager.getConfig().getString("Sounds.Type"));
+        Sound sound = Registry.SOUNDS.get(NamespacedKey.fromString(ConfigManager.getConfig().getString("Sounds.Type")));
         float volume = (float) ConfigManager.getConfig().getDouble("Sounds.Volume");
         float pitch = (float) ConfigManager.getConfig().getDouble("Sounds.Pitch");
 
